@@ -1,0 +1,26 @@
+[tool.poetry]
+name = "apirechtegewalt"
+version = "0.0.0"
+description = ""
+authors = []
+
+[tool.poetry.dependencies]
+python = ">=3.8"
+django = ">=2.2"
+django-extensions = "*"
+django-dotenv = "*"
+django-redis = "*"
+psycopg2-binary = "*"
+sentry-sdk = "*"
+uwsgi = "*"
+whitenoise = "*"
+
+[tool.poetry.dev-dependencies]
+werkzeug = "*" # used for local development server
+pytest = "*"
+pytest-cov = "*"
+black = {version = "*", allow-prereleases = true, python = ">=3.6"}
+
+[build-system]
+requires = ["poetry>=0.12"]
+build-backend = "poetry.masonry.api"

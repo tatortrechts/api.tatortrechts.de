@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     "whitenoise.runserver_nostatic",
     "django.contrib.staticfiles",
     "django_extensions",
+    "django.contrib.gis",
     "apirechtegewalt.main",
 ]
 
@@ -94,7 +95,7 @@ CONN_MAX_AGE = 60 * 60
 if os.getenv("IN_DOCKER"):
     DATABASES = {
         "default": {
-            "ENGINE": "django.db.backends.postgresql_psycopg2",
+            "ENGINE": "django.contrib.gis.db.backends.postgis",
             "NAME": "postgres",
             "USER": "postgres",
             "PASSWORD": "password",
@@ -144,8 +145,7 @@ elif os.getenv("DATABASE_URL"):
     SESSION_COOKIE_AGE = 365 * 24 * 60 * 60
     SESSION_COOKIE_SECURE = True
 else:
-    raise ValueError("Can't connect to databases.")
-
+    print("Can't connect to the database right now since environment variables are missing.")
 
 
 if os.getenv("EMAIL_URL", ""):

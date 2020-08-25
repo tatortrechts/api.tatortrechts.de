@@ -4,30 +4,16 @@ services:
     redis:
         image: redis:6-alpine
     db:
-        image: postgres:11-alpine
-        stop_signal: SIGINT # Fast shutdown.
+        image: postgis/postgis:11-3.0-alpine
         environment:
             POSTGRES_PASSWORD: password
         volumes:
             - ./misc/dbdata:/var/lib/postgresql/data:delegated
+
     web:
-        # Docker hack to wait until Postgres is up, then run stuff.
-        command: >
-            bash -c "while ! nc -w 1 -z db 5432;
-                     do sleep 0.1;
-                     done;
-
-                     ./manage.py migrate;
-
-                     while :;
-                     do exec ./manage.py runserver_plus 0.0.0.0:8000;
-                     done;
-                     "
+        command: ./manage.py runserver 0.0.0.0:8000
         image: "web"
         build: .
-        stop_signal: SIGINT # The devserver only stops on SIGINT.
-        stdin_open: true
-        tty: true
         volumes:
             - .:/code:cached
         ports:
@@ -35,5 +21,17 @@ services:
         depends_on:
             - db
             - redis
+            - migration
+        environment:
+            IN_DOCKER: 1
+
+    migration:
+        image: web
+        build: .
+        command: bash -c "./manage.py makemigrations && ./manage.py migrate --noinput"
+        volumes:
+            - .:/code
+        depends_on:
+            - db
         environment:
             IN_DOCKER: 1

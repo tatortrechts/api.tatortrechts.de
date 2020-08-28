@@ -1,3 +1,14 @@
+
+```bash
+docker-compose run --rm migration
+```
+
+
+```bash
+docker-compose run --rm migration ./manage.py import_data /importdata/rechtegewalt.db
+```
+
+
 # Django Startproject Docker Dokku
 
 This is a simple Django 2.0+ project template that uses Docker for development, and deploys to a [Dokku](https://github.com/dokku/dokku) instance.

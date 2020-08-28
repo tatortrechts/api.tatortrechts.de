@@ -16,6 +16,8 @@ services:
         build: .
         volumes:
             - .:/code:cached
+            - ./misc/importdata:/importdata
+
         ports:
             - "8000:8000"
         depends_on:
@@ -31,6 +33,7 @@ services:
         command: bash -c "./manage.py makemigrations && ./manage.py migrate --noinput"
         volumes:
             - .:/code
+            - ./misc/importdata:/importdata
         depends_on:
             - db
         environment:

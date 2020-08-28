@@ -14,6 +14,8 @@ psycopg2-binary = "*"
 sentry-sdk = "*"
 uwsgi = "*"
 whitenoise = "*"
+dataset="*"
+tqdm="*"
 
 [tool.poetry.dev-dependencies]
 werkzeug = "*" # used for local development server

@@ -184,6 +184,14 @@ redis = ">=3.0.0"
 
 [[package]]
 category = "main"
+description = "Full-text multi-table search application for Django. Easy to install and use, with good performance."
+name = "django-watson"
+optional = false
+python-versions = "*"
+version = "1.5.5"
+
+[[package]]
+category = "main"
 description = "Web APIs for Django, made easy."
 name = "djangorestframework"
 optional = false
@@ -548,7 +556,7 @@ version = "5.0"
 brotli = ["brotli"]
 
 [metadata]
-content-hash = "a5f379abaf2372b4a389b27ca84c22b9e5a509363ff7b78af816de82d0e9ea64"
+content-hash = "fa8431b4d749001164ce2c644c8f90e75811c0458172fb70cab22abe8e833ca8"
 python-versions = ">=3.8"
 
 [metadata.files]
@@ -652,6 +660,9 @@ django-filter = [
 django-redis = [
     {file = "django-redis-4.12.1.tar.gz", hash = "sha256:306589c7021e6468b2656edc89f62b8ba67e8d5a1c8877e2688042263daa7a63"},
     {file = "django_redis-4.12.1-py3-none-any.whl", hash = "sha256:1133b26b75baa3664164c3f44b9d5d133d1b8de45d94d79f38d1adc5b1d502e5"},
+]
+django-watson = [
+    {file = "django-watson-1.5.5.tar.gz", hash = "sha256:456123d1601f275ef222d9ccbb3b73e7dcb70f1370e4d45651aa2d359ee6e0e3"},
 ]
 djangorestframework = [
     {file = "djangorestframework-3.11.1-py3-none-any.whl", hash = "sha256:8b1ac62c581dbc5799b03e535854b92fc4053ecfe74bad3f9c05782063d4196b"},

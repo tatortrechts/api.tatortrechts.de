@@ -7,9 +7,10 @@ from . import views
 
 router = routers.DefaultRouter()
 router.register(r"incidents", views.IncidentViewSet)
+router.register(
+    r"aggincidents", views.AggregatedIncidentsViewSet, basename="aggincident"
+)
 
-# Wire up our API using automatic URL routing.
-# Additionally, we include login URLs for the browsable API.
 urlpatterns = [
     path("", include(router.urls)),
 ]

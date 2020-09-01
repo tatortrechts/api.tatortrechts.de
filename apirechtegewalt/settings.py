@@ -49,6 +49,7 @@ INSTALLED_APPS = [
     "django_filters",
     "rest_framework",
     "rest_framework_gis",
+    "watson",
     "apirechtegewalt.main",
 ]
 
@@ -218,6 +219,8 @@ REST_FRAMEWORK = {
     "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.LimitOffsetPagination",
     "PAGE_SIZE": 100,
 }
+
+WATSON_POSTGRES_SEARCH_CONFIG = "pg_catalog.german"
 
 
 try:

@@ -6,3 +6,8 @@ class MainConfig(AppConfig):
 
     def ready(self):
         import apirechtegewalt.main.signals  # noqa
+
+        from watson import search as watson
+
+        Incident = self.get_model("Incident")
+        watson.register(Incident)

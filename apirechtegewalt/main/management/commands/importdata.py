@@ -34,12 +34,19 @@ class Command(BaseCommand):
 
         for incident in tqdm(db["incidents"].all()):
             l = Location.objects.get(subdivisions=incident["subdivisions"])
+
+            for x in ["id", "latitude", "longitude", "point_geom", "subdivisions"]:
+                del incident[x]
+
             obj, created = Incident.objects.update_or_create(location=l, **incident)
 
         for source in tqdm(db["sources"].all()):
-            incident = Incident.objects.get(rg_id=source["rg_id"])
-            obj, created = Source.objects.update_or_create(
-                incident=incident, **incident
-            )
+            try:
+                incident = Incident.objects.get(rg_id=source["rg_id"])
+            except Incident.DoesNotExist:
+                print(f"cannot find an incident for {source}")
+                continue
+            del source["id"]
+            obj, created = Source.objects.update_or_create(incident=incident, **source)
 
         self.stdout.write(self.style.SUCCESS("Successfully imported data"))

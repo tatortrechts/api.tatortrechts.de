@@ -1,13 +1,16 @@
 
 ```bash
-docker-compose run --rm migration
+docker-compose run --rm manage
 ```
 
 
 ```bash
-docker-compose run --rm migration ./manage.py import_data /importdata/rechtegewalt.db
+docker-compose run --rm manage ./manage.py importdata /importdata/rechtegewalt.db
 ```
 
+```bash
+docker-compose run --rm manage reset_db
+```
 
 # Django Startproject Docker Dokku
 

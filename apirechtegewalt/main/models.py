@@ -20,10 +20,10 @@ class Location(models.Model):
 class Incident(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    rg_id = models.CharField(max_length=255)
+    rg_id = models.CharField(max_length=255, unique=True)
     url = models.CharField(max_length=255)
     aggregator = models.CharField(max_length=255)
-    title = models.CharField(max_length=1000, blank=True, default="")
+    title = models.CharField(max_length=1000, blank=True, default="", null=True)
     description = models.TextField()
     date = models.DateField()
     iso3166_2 = models.CharField(max_length=5)
@@ -33,7 +33,7 @@ class Incident(models.Model):
 class Source(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    rg_id = models.CharField(max_length=255)
+    rg_id = models.CharField(max_length=255, unique=True)
     name = models.CharField(max_length=255)
     url = models.CharField(max_length=255, blank=True, default="")
     date = models.DateField(blank=True, null=True)

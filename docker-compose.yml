@@ -23,11 +23,11 @@ services:
         depends_on:
             - db
             - redis
-            - migration
+            - manage
         environment:
             IN_DOCKER: 1
 
-    migration:
+    manage:
         image: web
         build: .
         command: bash -c "./manage.py makemigrations && ./manage.py migrate --noinput"

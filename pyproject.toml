@@ -6,7 +6,10 @@ authors = []
 
 [tool.poetry.dependencies]
 python = ">=3.8"
-django = ">=2.2"
+django = ">=3.1"
+djangorestframework="^3.10.0"
+djangorestframework-gis="^0.15.0"
+django-filter="*"
 django-extensions = "*"
 django-dotenv = "*"
 django-redis = "*"
@@ -16,6 +19,7 @@ uwsgi = "*"
 whitenoise = "*"
 dataset="*"
 tqdm="*"
+markdown="*"
 
 [tool.poetry.dev-dependencies]
 werkzeug = "*" # used for local development server

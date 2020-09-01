@@ -132,7 +132,7 @@ description = "A high-level Python Web framework that encourages rapid developme
 name = "django"
 optional = false
 python-versions = ">=3.6"
-version = "3.1"
+version = "3.1.1"
 
 [package.dependencies]
 asgiref = ">=3.2.10,<3.3.0"
@@ -157,7 +157,18 @@ description = "Extensions for Django"
 name = "django-extensions"
 optional = false
 python-versions = ">=3.5"
-version = "3.0.5"
+version = "3.0.6"
+
+[[package]]
+category = "main"
+description = "Django-filter is a reusable Django application for allowing users to filter querysets dynamically."
+name = "django-filter"
+optional = false
+python-versions = ">=3.5"
+version = "2.3.0"
+
+[package.dependencies]
+Django = ">=2.2"
 
 [[package]]
 category = "main"
@@ -170,6 +181,28 @@ version = "4.12.1"
 [package.dependencies]
 Django = ">=2.2"
 redis = ">=3.0.0"
+
+[[package]]
+category = "main"
+description = "Web APIs for Django, made easy."
+name = "djangorestframework"
+optional = false
+python-versions = ">=3.5"
+version = "3.11.1"
+
+[package.dependencies]
+django = ">=1.11"
+
+[[package]]
+category = "main"
+description = "Geographic add-ons for Django Rest Framework"
+name = "djangorestframework-gis"
+optional = false
+python-versions = "*"
+version = "0.15"
+
+[package.dependencies]
+djangorestframework = "*"
 
 [[package]]
 category = "dev"
@@ -193,6 +226,17 @@ MarkupSafe = ">=0.9.2"
 [package.extras]
 babel = ["babel"]
 lingua = ["lingua"]
+
+[[package]]
+category = "main"
+description = "Python implementation of Markdown."
+name = "markdown"
+optional = false
+python-versions = ">=3.5"
+version = "3.2.2"
+
+[package.extras]
+testing = ["coverage", "pyyaml"]
 
 [[package]]
 category = "main"
@@ -366,7 +410,7 @@ description = "Python client for Sentry (https://sentry.io)"
 name = "sentry-sdk"
 optional = false
 python-versions = "*"
-version = "0.17.0"
+version = "0.17.2"
 
 [package.dependencies]
 certifi = "*"
@@ -504,7 +548,7 @@ version = "5.0"
 brotli = ["brotli"]
 
 [metadata]
-content-hash = "5eee90b4c253e19e97a0a69d743577f531bfdf34cdcb709b68b38430f52684b0"
+content-hash = "a5f379abaf2372b4a389b27ca84c22b9e5a509363ff7b78af816de82d0e9ea64"
 python-versions = ">=3.8"
 
 [metadata.files]
@@ -590,20 +634,32 @@ dataset = [
     {file = "dataset-1.3.2.tar.gz", hash = "sha256:6be387eefcd5a98fe1a68b1403390648c71f2edc5cb271f0e1f1a44ca83409eb"},
 ]
 django = [
-    {file = "Django-3.1-py3-none-any.whl", hash = "sha256:1a63f5bb6ff4d7c42f62a519edc2adbb37f9b78068a5a862beff858b68e3dc8b"},
-    {file = "Django-3.1.tar.gz", hash = "sha256:2d390268a13c655c97e0e2ede9d117007996db692c1bb93eabebd4fb7ea7012b"},
+    {file = "Django-3.1.1-py3-none-any.whl", hash = "sha256:b5fbb818e751f660fa2d576d9f40c34a4c615c8b48dd383f5216e609f383371f"},
+    {file = "Django-3.1.1.tar.gz", hash = "sha256:59c8125ca873ed3bdae9c12b146fbbd6ed8d0f743e4cf5f5817af50c51f1fc2f"},
 ]
 django-dotenv = [
     {file = "django-dotenv-1.4.2.tar.gz", hash = "sha256:3812bb0f4876cf31f902aad140f0645e120e51ee30eb7c40c22050f58a0e4adb"},
     {file = "django_dotenv-1.4.2-py2.py3-none-any.whl", hash = "sha256:a9b1b40a70bd321acd231926acedb9bd2c5e873e33a1873b34a7276d196a765e"},
 ]
 django-extensions = [
-    {file = "django-extensions-3.0.5.tar.gz", hash = "sha256:6306175ae8c78c18ea7aff794f5fa3a47de7d128666e6668bd40596895da7f84"},
-    {file = "django_extensions-3.0.5-py2.py3-none-any.whl", hash = "sha256:40d4b7aec7bbe66dda8704fbfaf2e1b7e04ec4aea6b10dcbd78d8af7c37bfddb"},
+    {file = "django-extensions-3.0.6.tar.gz", hash = "sha256:59df0c4dfe93bffdbdeeb474633ef7654589c9ccc6dcd1f34605198f5e2ede05"},
+    {file = "django_extensions-3.0.6-py2.py3-none-any.whl", hash = "sha256:ec7f3aa9d51bb00f84099c3a71e5090984b7bcdcad247407106250642c23d722"},
+]
+django-filter = [
+    {file = "django-filter-2.3.0.tar.gz", hash = "sha256:11e63dd759835d9ba7a763926ffb2662cf8a6dcb4c7971a95064de34dbc7e5af"},
+    {file = "django_filter-2.3.0-py3-none-any.whl", hash = "sha256:616848eab6fc50193a1b3730140c49b60c57a3eda1f7fc57fa8505ac156c6c75"},
 ]
 django-redis = [
     {file = "django-redis-4.12.1.tar.gz", hash = "sha256:306589c7021e6468b2656edc89f62b8ba67e8d5a1c8877e2688042263daa7a63"},
     {file = "django_redis-4.12.1-py3-none-any.whl", hash = "sha256:1133b26b75baa3664164c3f44b9d5d133d1b8de45d94d79f38d1adc5b1d502e5"},
+]
+djangorestframework = [
+    {file = "djangorestframework-3.11.1-py3-none-any.whl", hash = "sha256:8b1ac62c581dbc5799b03e535854b92fc4053ecfe74bad3f9c05782063d4196b"},
+    {file = "djangorestframework-3.11.1.tar.gz", hash = "sha256:6dd02d5a4bd2516fb93f80360673bf540c3b6641fec8766b1da2870a5aa00b32"},
+]
+djangorestframework-gis = [
+    {file = "djangorestframework-gis-0.15.tar.gz", hash = "sha256:f388c159ab42ee2549c88de20655dc6020d01f0220b74c250a98735a26835f72"},
+    {file = "djangorestframework_gis-0.15-py2.py3-none-any.whl", hash = "sha256:63c253528a107bc77cd71506cd639a0489b05b763fa7c3190cfd4622bf094594"},
 ]
 iniconfig = [
     {file = "iniconfig-1.0.1-py3-none-any.whl", hash = "sha256:80cf40c597eb564e86346103f609d74efce0f6b4d4f30ec8ce9e2c26411ba437"},
@@ -612,6 +668,10 @@ iniconfig = [
 mako = [
     {file = "Mako-1.1.3-py2.py3-none-any.whl", hash = "sha256:93729a258e4ff0747c876bd9e20df1b9758028946e976324ccd2d68245c7b6a9"},
     {file = "Mako-1.1.3.tar.gz", hash = "sha256:8195c8c1400ceb53496064314c6736719c6f25e7479cd24c77be3d9361cddc27"},
+]
+markdown = [
+    {file = "Markdown-3.2.2-py3-none-any.whl", hash = "sha256:c467cd6233885534bf0fe96e62e3cf46cfc1605112356c4f9981512b8174de59"},
+    {file = "Markdown-3.2.2.tar.gz", hash = "sha256:1fafe3f1ecabfb514a5285fca634a53c1b32a81cb0feb154264d55bf2ff22c17"},
 ]
 markupsafe = [
     {file = "MarkupSafe-1.1.1-cp27-cp27m-macosx_10_6_intel.whl", hash = "sha256:09027a7803a62ca78792ad89403b1b7a73a01c8cb65909cd876f7fcebd79b161"},
@@ -759,8 +819,8 @@ regex = [
     {file = "regex-2020.7.14.tar.gz", hash = "sha256:3a3af27a8d23143c49a3420efe5b3f8cf1a48c6fc8bc6856b03f638abc1833bb"},
 ]
 sentry-sdk = [
-    {file = "sentry-sdk-0.17.0.tar.gz", hash = "sha256:09cbc253c827a88064c5ed548d24fb4294568bfe9b1816a857fa5a423d4ce762"},
-    {file = "sentry_sdk-0.17.0-py2.py3-none-any.whl", hash = "sha256:1d654ac57be9967dae67545fb759f6e7594de07f487c21a276e6466dd52e83f1"},
+    {file = "sentry-sdk-0.17.2.tar.gz", hash = "sha256:bbfe5633aee4dacb53d79d303ab6bfacf1749fb717750c112fb1658e5accce0d"},
+    {file = "sentry_sdk-0.17.2-py2.py3-none-any.whl", hash = "sha256:5b884a391da04696c1d81d636d2ad728fd838370db1acdfda3acbad1fe5be830"},
 ]
 six = [
     {file = "six-1.15.0-py2.py3-none-any.whl", hash = "sha256:8b74bedcbbbaca38ff6d7491d76f2b06b3592611af620f8426e82dddb04a5ced"},

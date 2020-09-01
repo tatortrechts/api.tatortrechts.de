@@ -46,6 +46,9 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "django_extensions",
     "django.contrib.gis",
+    "django_filters",
+    "rest_framework",
+    "rest_framework_gis",
     "apirechtegewalt.main",
 ]
 
@@ -145,7 +148,9 @@ elif os.getenv("DATABASE_URL"):
     SESSION_COOKIE_AGE = 365 * 24 * 60 * 60
     SESSION_COOKIE_SECURE = True
 else:
-    print("Can't connect to the database right now since environment variables are missing.")
+    print(
+        "Can't connect to the database right now since environment variables are missing."
+    )
 
 
 if os.getenv("EMAIL_URL", ""):
@@ -208,6 +213,12 @@ STATIC_URL = "/static/"
 STATIC_ROOT = os.path.join(BASE_DIR, "_static")
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 STATICFILES_DIRS = [os.path.join(BASE_DIR, "static")]
+
+REST_FRAMEWORK = {
+    "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.LimitOffsetPagination",
+    "PAGE_SIZE": 100,
+}
+
 
 try:
     from .local_settings import *  # noqa

@@ -1,56 +1,47 @@
-from django.db.models import Count
+from django.db.models import Count, Q
 from django.shortcuts import get_object_or_404
-from rest_framework import permissions, viewsets
-from rest_framework.response import Response
+from django_filters import rest_framework as filters
+from rest_framework import viewsets
 from watson import search as watson
 
 from .models import Incident, Location
 from .serializers import AggregatedIncidentsSerializer, IncidentSerializer
 
 
-class IncidentViewSet(viewsets.ModelViewSet):
+class IncidentFilter(filters.FilterSet):
+    start_date = filters.DateFilter("date", "gt")
+    end_date = filters.DateFilter("date", "lt")
+    aggregator = filters.CharFilter(lookup_expr="icontains")
+
+    class Meta:
+        model = Incident
+        fields = ["aggregator", "location", "start_date", "end_date"]
+
+
+class IncidentViewSet(viewsets.ReadOnlyModelViewSet):
     """
     API endpoint that allows users to be viewed or edited.
     """
 
     queryset = Incident.objects.all().order_by("-date")
     serializer_class = IncidentSerializer
-    # permission_classes = [permissions.IsAuthenticated]
 
 
-class AggregatedIncidentsViewSet(viewsets.ModelViewSet):
-    queryset = Location.objects.all()
+class AggregatedIncidentsViewSet(viewsets.ReadOnlyModelViewSet):
+    queryset = Incident.objects.all()
     serializer_class = AggregatedIncidentsSerializer
+    filterset_class = IncidentFilter
 
-    def get_queryset(self):
-        qs = Location.objects
+    def filter_queryset(self, queryset):
+        # first apply django-filter
+        queryset = super().filter_queryset(queryset)
 
         search_term = self.request.query_params.get("q", None)
         if search_term is not None:
             search_results = watson.filter(Incident, search_term)
-            qs = qs.filter(incident__in=search_results)
+            queryset = queryset & search_results
 
-        return qs.annotate(total=Count("incident")).order_by("-total")
-
-
-# class AggregatedIncidentsViewSet(viewsets.ViewSet):
-#     """
-#     A simple ViewSet for listing or retrieving users.
-#     """
-
-#     def list(self, request):
-#         queryset = (
-#             Incident.objects.all()
-#             .values("location", "total")
-#             .annotate(total=Count("location"))
-#             # .order_by("total")
-#         )
-
-#         serializer = AggregatedIncidentsSerializer(queryset, many=True)
-#         return Response(serializer.data)
-
-#     def retrieve(self, request, pk=None):
-#         queryset = Incident.objects.filter(location=pk)
-#         location = get_object_or_404(queryset, pk=pk)
-#         serializer = IncidentSerializer(location)
-#         return Response(serializer.data)
+        # queryset is based on Incident, but we need Location
+        return Location.objects.annotate(
+            total=Count("incident", filter=Q(incident__in=queryset))
+        ).filter(total__gt=0)

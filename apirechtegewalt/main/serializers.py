@@ -30,7 +30,7 @@ class AggregatedIncidentsSerializer(GeoFeatureModelSerializer):
 
     class Meta:
         model = Location
-        fields = ["id", "subdivisions", "geolocation", "total"]
+        fields = ["id", "geolocation", "total"]
         geo_field = "geolocation"
 
 

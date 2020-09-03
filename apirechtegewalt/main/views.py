@@ -34,6 +34,7 @@ class AggregatedIncidentsViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Incident.objects.all()
     serializer_class = AggregatedIncidentsSerializer
     filterset_class = IncidentFilter
+    pagination_class = None
 
     def filter_queryset(self, queryset):
         # first apply django-filter

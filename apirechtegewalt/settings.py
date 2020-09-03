@@ -49,6 +49,7 @@ INSTALLED_APPS = [
     "whitenoise.runserver_nostatic",
     "django.contrib.staticfiles",
     "django_extensions",
+    "corsheaders",
     "django.contrib.gis",
     "django_filters",
     "rest_framework",
@@ -57,6 +58,8 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    "corsheaders.middleware.CorsMiddleware",
+    "django.middleware.common.CommonMiddleware",
     "django.middleware.security.SecurityMiddleware",
     "apirechtegewalt.middleware.StatsMiddleware",
     "whitenoise.middleware.WhiteNoiseMiddleware",
@@ -95,6 +98,8 @@ AUTH_USER_MODEL = "main.User"
 
 # Adjust this to taste.
 SESSION_ENGINE = "django.contrib.sessions.backends.cached_db"
+
+CORS_ALLOW_ALL_ORIGINS = True
 
 # Keep connections in the pool for an hour.
 CONN_MAX_AGE = 60 * 60

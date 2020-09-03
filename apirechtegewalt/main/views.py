@@ -2,7 +2,6 @@ from django.db.models import Count, Q
 from django.shortcuts import get_object_or_404
 from django_filters import rest_framework as filters
 from rest_framework import viewsets
-from django.db.models.functions import Length
 
 from .models import Incident, Location, Phrase
 from .serializers import (
@@ -60,7 +59,8 @@ class AutocompleteViewSet(viewsets.ReadOnlyModelViewSet):
         # first apply django-filter
         queryset = super().filter_queryset(queryset)
 
-        search_term = self.request.query_params.get("q", None)
+        search_term = self.request.query_params.get("q", "")
+
         suggestions = Phrase.objects.search(search_term)[:10]
 
         return sorted(suggestions, key=lambda x: len(x.string))

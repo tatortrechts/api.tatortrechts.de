@@ -9,7 +9,7 @@ docker-compose run --rm manage ./manage.py importdata /importdata/rechtegewalt.d
 ```
 
 ```bash
-docker-compose run --rm manage reset_db
+docker-compose run --rm manage  ./manage.py reset_db
 ```
 
 # Django Startproject Docker Dokku

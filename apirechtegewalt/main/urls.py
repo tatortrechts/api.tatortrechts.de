@@ -10,6 +10,9 @@ router.register(r"incidents", views.IncidentViewSet)
 router.register(
     r"aggincidents", views.AggregatedIncidentsViewSet, basename="aggincident"
 )
+router.register(
+    r"autocomplete", views.AutocompleteViewSet, basename="autocomplete"
+)
 
 urlpatterns = [
     path("", include(router.urls)),

@@ -49,7 +49,6 @@ INSTALLED_APPS = [
     "django_filters",
     "rest_framework",
     "rest_framework_gis",
-    "watson",
     "apirechtegewalt.main",
 ]
 
@@ -220,8 +219,6 @@ REST_FRAMEWORK = {
     "PAGE_SIZE": 100,
     "DEFAULT_FILTER_BACKENDS": ("django_filters.rest_framework.DjangoFilterBackend",),
 }
-
-WATSON_POSTGRES_SEARCH_CONFIG = "pg_catalog.german"
 
 
 try:

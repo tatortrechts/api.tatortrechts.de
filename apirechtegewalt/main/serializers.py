@@ -32,3 +32,7 @@ class AggregatedIncidentsSerializer(GeoFeatureModelSerializer):
         model = Location
         fields = ["id", "subdivisions", "geolocation", "total"]
         geo_field = "geolocation"
+
+
+class AutocompleteSerializer(serializers.Serializer):
+    string = serializers.CharField()

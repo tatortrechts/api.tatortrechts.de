@@ -1,10 +1,8 @@
 import dataset
-from django.core.management.base import BaseCommand, CommandError
-
-from tqdm import tqdm
-
 from apirechtegewalt.main.models import Incident, Location, Source
 from django.contrib.gis.geos import Point
+from django.core.management.base import BaseCommand, CommandError
+from tqdm import tqdm
 
 
 class Command(BaseCommand):
@@ -48,5 +46,7 @@ class Command(BaseCommand):
                 continue
             del source["id"]
             obj, created = Source.objects.update_or_create(incident=incident, **source)
+
+        Incident.objects.sync()
 
         self.stdout.write(self.style.SUCCESS("Successfully imported data"))

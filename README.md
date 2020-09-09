@@ -12,6 +12,28 @@ docker-compose run --rm manage ./manage.py importdata /importdata/rechtegewalt.d
 docker-compose run --rm manage  ./manage.py reset_db
 ```
 
+
+
+
+
+The alpine version of postgis does not work together with Dokku.
+
+```
+sudo dokku postgres:create apirg-db -i "postgis/postgis" -I "11-3.0"
+```
+
+
+
+
+
+```
+sudo dokku run apirg ./manage.py importdata /importdata/rechtegewalt.db
+```
+
+
+
+
+
 # Django Startproject Docker Dokku
 
 This is a simple Django 2.0+ project template that uses Docker for development, and deploys to a [Dokku](https://github.com/dokku/dokku) instance.

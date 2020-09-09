@@ -12,7 +12,7 @@ services:
 
     web:
         command: ./manage.py runserver 0.0.0.0:8000
-        image: "web"
+        image: web
         build: .
         volumes:
             - .:/code:cached

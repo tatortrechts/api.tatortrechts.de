@@ -6,9 +6,11 @@ from rest_framework import routers
 from . import views
 
 router = routers.DefaultRouter()
-router.register(r"incidents", views.IncidentViewSet, basename="incident")
+router.register(r"incidents", views.IncidentsViewSet, basename="incident")
 router.register(
-    r"aggincidents", views.AggregatedIncidentsViewSet, basename="aggincident"
+    r"aggregated_incidents",
+    views.AggregatedIncidentsViewSet,
+    basename="aggregated_incidents",
 )
 router.register(r"autocomplete", views.AutocompleteViewSet, basename="autocomplete")
 

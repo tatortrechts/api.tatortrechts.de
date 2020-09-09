@@ -1,9 +1,6 @@
-from django.contrib.gis.db.models import PointField
 from django.contrib.gis.geos import Polygon
 from django.core.paginator import Paginator
 from django.db.models import Count, Q
-from django.db.models.functions import Cast
-from django.shortcuts import get_object_or_404
 from django.utils.decorators import method_decorator
 from django.utils.functional import cached_property
 from django.views.decorators.cache import cache_page
@@ -15,7 +12,7 @@ from .models import Incident, Location, Phrase
 from .serializers import (
     AggregatedIncidentsSerializer,
     AutocompleteSerializer,
-    IncidentSerializer,
+    IncidentsSerializer,
 )
 
 
@@ -29,29 +26,29 @@ class IncidentFilter(filters.FilterSet):
         fields = ["aggregator", "location", "start_date", "end_date"]
 
 
-class FasterDjangoPaginator(Paginator):
+class CacheCountPaginator(Paginator):
     @cached_property
     def count(self):
         # only select 'id' for counting, much cheaper
         return self.object_list.values("id").count()
 
 
-class SmallResultsSetPagination(PageNumberPagination):
-    django_paginator_class = FasterDjangoPaginator
+class SmallFastSetPagination(PageNumberPagination):
+    django_paginator_class = CacheCountPaginator
     page_size = 10
     page_size_query_param = "page_size"
-    max_page_size = 20
+    max_page_size = 10
 
 
-class IncidentViewSet(viewsets.ReadOnlyModelViewSet):
+class IncidentsViewSet(viewsets.ReadOnlyModelViewSet):
     """
     API endpoint that allows users to be viewed or edited.
     """
 
     queryset = Incident.objects
-    serializer_class = IncidentSerializer
+    serializer_class = IncidentsSerializer
     filterset_class = IncidentFilter
-    pagination_class = SmallResultsSetPagination
+    pagination_class = SmallFastSetPagination
 
     def filter_queryset(self, queryset):
         queryset = super().filter_queryset(queryset)
@@ -109,4 +106,4 @@ class AutocompleteViewSet(viewsets.ReadOnlyModelViewSet):
         queryset = super().filter_queryset(queryset)
         search_term = self.request.query_params.get("q", "")
         suggestions = Phrase.objects.search(search_term)[:10]
-        return sorted(suggestions, key=lambda x: len(x.string))
+        return sorted(suggestions, key=lambda x: len(x.option))

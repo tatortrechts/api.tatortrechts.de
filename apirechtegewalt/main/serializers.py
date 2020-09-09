@@ -1,6 +1,7 @@
-from .models import Incident, Location, Source
 from rest_framework import serializers
 from rest_framework_gis.serializers import GeoFeatureModelSerializer
+
+from .models import Incident, Location, Source
 
 
 class LocationSerializer(serializers.ModelSerializer):
@@ -15,7 +16,7 @@ class SourceSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 
-class IncidentSerializer(serializers.ModelSerializer):
+class IncidentsSerializer(serializers.ModelSerializer):
     location = LocationSerializer(read_only=True)
     sources = SourceSerializer(source="source_set", many=True, read_only=True)
 
@@ -34,4 +35,4 @@ class AggregatedIncidentsSerializer(GeoFeatureModelSerializer):
 
 
 class AutocompleteSerializer(serializers.Serializer):
-    string = serializers.CharField()
+    option = serializers.CharField()

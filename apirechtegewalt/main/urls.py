@@ -6,13 +6,11 @@ from rest_framework import routers
 from . import views
 
 router = routers.DefaultRouter()
-router.register(r"incidents", views.IncidentViewSet)
+router.register(r"incidents", views.IncidentViewSet, basename="incident")
 router.register(
     r"aggincidents", views.AggregatedIncidentsViewSet, basename="aggincident"
 )
-router.register(
-    r"autocomplete", views.AutocompleteViewSet, basename="autocomplete"
-)
+router.register(r"autocomplete", views.AutocompleteViewSet, basename="autocomplete")
 
 urlpatterns = [
     path("", include(router.urls)),

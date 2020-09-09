@@ -3,11 +3,10 @@ from rest_framework import serializers
 from rest_framework_gis.serializers import GeoFeatureModelSerializer
 
 
-class LocationSerializer(GeoFeatureModelSerializer):
+class LocationSerializer(serializers.ModelSerializer):
     class Meta:
         model = Location
-        fields = ["id", "subdivisions", "geolocation"]
-        geo_field = "geolocation"
+        fields = ["id", "subdivisions"]
 
 
 class SourceSerializer(serializers.ModelSerializer):
@@ -22,7 +21,7 @@ class IncidentSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Incident
-        fields = "__all__"
+        exclude = ["search_vector"]
 
 
 class AggregatedIncidentsSerializer(GeoFeatureModelSerializer):

@@ -70,6 +70,9 @@ class Location(models.Model):
     subdivisions = models.CharField(max_length=255, db_index=True, unique=True)
     geolocation = models.PointField(geography=True, default=Point(0.0, 0.0))
 
+    # this is not geographical but speeds up computation for e.g. bounding box check
+    geolocation_geometry = models.PointField(default=Point(0.0, 0.0))
+
 
 class Incident(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)

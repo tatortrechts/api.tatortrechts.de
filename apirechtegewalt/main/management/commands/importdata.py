@@ -22,12 +22,15 @@ class Command(BaseCommand):
             try:
                 obj = Location.objects.get(subdivisions=sub)
                 obj.geolocation = p
+                obj.geolocation_geometry = p
                 # for key, value in defaults.items():
                 #     setattr(obj, key, value)
                 obj.save()
             except Location.DoesNotExist:
                 obj = Location.objects.create(
-                    subdivisions=location["subdivisions"], geolocation=p
+                    subdivisions=location["subdivisions"],
+                    geolocation=p,
+                    geolocation_geometry=p,
                 )
 
         for incident in tqdm(db["incidents"].all()):

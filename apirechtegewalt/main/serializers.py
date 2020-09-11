@@ -7,7 +7,7 @@ from .models import Incident, Location, Source
 class LocationSerializer(serializers.ModelSerializer):
     class Meta:
         model = Location
-        fields = ["id", "subdivisions"]
+        fields = ["id", "location_string"]
 
 
 class SourceSerializer(serializers.ModelSerializer):

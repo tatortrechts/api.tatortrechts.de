@@ -19,11 +19,10 @@ from .serializers import (
 class IncidentFilter(filters.FilterSet):
     start_date = filters.DateFilter("date", "gt")
     end_date = filters.DateFilter("date", "lt")
-    aggregator = filters.CharFilter(lookup_expr="icontains")
 
     class Meta:
         model = Incident
-        fields = ["aggregator", "location", "start_date", "end_date"]
+        fields = ["chronicle", "location", "start_date", "end_date"]
 
 
 class CacheCountPaginator(Paginator):

@@ -1,13 +1,19 @@
 from rest_framework import serializers
 from rest_framework_gis.serializers import GeoFeatureModelSerializer
 
-from .models import Incident, Location, Source
+from .models import Incident, Location, Source, Chronicle
+
+
+class ChronicleSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Chronicle
+        fields = ["id", "name"]
 
 
 class LocationSerializer(serializers.ModelSerializer):
     class Meta:
         model = Location
-        fields = ["id", "location_string"]
+        fields = ["id", "location_string", "subdivisions"]
 
 
 class SourceSerializer(serializers.ModelSerializer):
@@ -18,6 +24,7 @@ class SourceSerializer(serializers.ModelSerializer):
 
 class IncidentsSerializer(serializers.ModelSerializer):
     location = LocationSerializer(read_only=True)
+    chronicle = ChronicleSerializer(read_only=True)
     sources = SourceSerializer(source="source_set", many=True, read_only=True)
 
     class Meta:

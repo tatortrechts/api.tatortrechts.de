@@ -18,7 +18,7 @@ class User(AbstractUser):
 class Location(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    subdivisions = models.CharField(max_length=255, db_index=True, unique=True)
+    location_string = models.CharField(max_length=255, db_index=True, unique=True)
     geolocation = models.PointField(geography=True, default=Point(0.0, 0.0))
 
     # this is not geographical but speeds up computation for e.g. bounding box check

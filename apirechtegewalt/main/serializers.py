@@ -43,3 +43,8 @@ class AggregatedIncidentsSerializer(GeoFeatureModelSerializer):
 
 class AutocompleteSerializer(serializers.Serializer):
     option = serializers.CharField()
+
+
+class HistogramIncidentsSerializer(serializers.Serializer):
+    month = serializers.DateField()
+    total = serializers.IntegerField()

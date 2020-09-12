@@ -1,6 +1,7 @@
 from django.contrib.gis.geos import Polygon
 from django.core.paginator import Paginator
 from django.db.models import Count, Q
+from django.db.models.functions import TruncMonth
 from django.utils.decorators import method_decorator
 from django.utils.functional import cached_property
 from django.views.decorators.cache import cache_page
@@ -13,6 +14,7 @@ from .serializers import (
     AggregatedIncidentsSerializer,
     AutocompleteSerializer,
     IncidentsSerializer,
+    HistogramIncidentsSerializer,
 )
 
 
@@ -40,10 +42,6 @@ class SmallFastSetPagination(PageNumberPagination):
 
 
 class IncidentsViewSet(viewsets.ReadOnlyModelViewSet):
-    """
-    API endpoint that allows users to be viewed or edited.
-    """
-
     queryset = Incident.objects
     serializer_class = IncidentsSerializer
     filterset_class = IncidentFilter
@@ -66,12 +64,26 @@ class IncidentsViewSet(viewsets.ReadOnlyModelViewSet):
                 location__geolocation_geometry__intersects=bbox_geom
             )
 
-        return queryset.all().order_by("-date")
+        return queryset.order_by("-date")
 
     # cache for 10 minutes
     @method_decorator(cache_page(60 * 10))
     def dispatch(self, request, *args, **kwargs):
         return super().dispatch(request, *args, **kwargs)
+
+
+class HistogramIncidentsViewSet(IncidentsViewSet):
+    pagination_class = None
+    serializer_class = HistogramIncidentsSerializer
+
+    def filter_queryset(self, queryset):
+        queryset = super().filter_queryset(queryset)
+        return (
+            queryset.annotate(month=TruncMonth("date"))
+            .values("month")
+            .order_by("month")
+            .annotate(total=Count("month"))
+        )
 
 
 class AggregatedIncidentsViewSet(viewsets.ReadOnlyModelViewSet):

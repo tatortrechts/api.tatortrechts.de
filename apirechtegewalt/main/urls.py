@@ -13,6 +13,11 @@ router.register(
     basename="aggregated_incidents",
 )
 router.register(r"autocomplete", views.AutocompleteViewSet, basename="autocomplete")
+router.register(
+    r"histogram_incidents",
+    views.HistogramIncidentsViewSet,
+    basename="histogram_incidents",
+)
 
 urlpatterns = [
     path("", include(router.urls)),

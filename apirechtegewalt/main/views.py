@@ -22,10 +22,11 @@ from .serializers import (
 class IncidentFilter(filters.FilterSet):
     start_date = filters.DateFilter("date", "gt")
     end_date = filters.DateFilter("date", "lt")
+    chronicle = filters.ModelMultipleChoiceFilter(queryset=Chronicle.objects.all())
 
     class Meta:
         model = Incident
-        fields = ["chronicle", "location", "start_date", "end_date"]
+        fields = ["location", "start_date", "end_date"]
 
 
 class CacheCountPaginator(Paginator):
@@ -74,8 +75,8 @@ class IncidentsViewSet(viewsets.ReadOnlyModelViewSet):
 
 
 class HistogramIncidentsViewSet(IncidentsViewSet):
-    pagination_class = None
     serializer_class = HistogramIncidentsSerializer
+    pagination_class = None
 
     def filter_queryset(self, queryset):
         queryset = super().filter_queryset(queryset)
@@ -108,6 +109,7 @@ class AggregatedIncidentsViewSet(viewsets.ReadOnlyModelViewSet):
         ).filter(total__gt=0)
 
 
+# Todo: BBOX ETC
 class AutocompleteViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Incident.objects.all()
     serializer_class = AutocompleteSerializer

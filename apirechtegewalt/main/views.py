@@ -9,12 +9,13 @@ from django_filters import rest_framework as filters
 from rest_framework import viewsets
 from rest_framework.pagination import PageNumberPagination
 
-from .models import Incident, Location, Phrase
+from .models import Incident, Location, Phrase, Chronicle
 from .serializers import (
     AggregatedIncidentsSerializer,
     AutocompleteSerializer,
     IncidentsSerializer,
     HistogramIncidentsSerializer,
+    ChroniclesSerializer,
 )
 
 
@@ -118,3 +119,10 @@ class AutocompleteViewSet(viewsets.ReadOnlyModelViewSet):
         search_term = self.request.query_params.get("q", "")
         suggestions = Phrase.objects.search(search_term)[:10]
         return sorted(suggestions, key=lambda x: len(x.option))
+
+
+class ChroniclesViewSet(viewsets.ReadOnlyModelViewSet):
+    queryset = Chronicle.objects.all()
+    serializer_class = ChroniclesSerializer
+    pagination_class = None
+

@@ -4,10 +4,10 @@ from rest_framework_gis.serializers import GeoFeatureModelSerializer
 from .models import Incident, Location, Source, Chronicle
 
 
-class ChronicleSerializer(serializers.ModelSerializer):
+class ChroniclesSerializer(serializers.ModelSerializer):
     class Meta:
         model = Chronicle
-        fields = ["id", "name"]
+        fields = ["id", "name", "region"]
 
 
 class LocationSerializer(serializers.ModelSerializer):
@@ -24,7 +24,7 @@ class SourceSerializer(serializers.ModelSerializer):
 
 class IncidentsSerializer(serializers.ModelSerializer):
     location = LocationSerializer(read_only=True)
-    chronicle = ChronicleSerializer(read_only=True)
+    chronicle = ChroniclesSerializer(read_only=True)
     sources = SourceSerializer(source="source_set", many=True, read_only=True)
 
     class Meta:
@@ -48,3 +48,4 @@ class AutocompleteSerializer(serializers.Serializer):
 class HistogramIncidentsSerializer(serializers.Serializer):
     month = serializers.DateField()
     total = serializers.IntegerField()
+

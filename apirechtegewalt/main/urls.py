@@ -18,6 +18,9 @@ router.register(
     views.HistogramIncidentsViewSet,
     basename="histogram_incidents",
 )
+router.register(
+    r"chronicles", views.ChroniclesViewSet, basename="chronicles",
+)
 
 urlpatterns = [
     path("", include(router.urls)),

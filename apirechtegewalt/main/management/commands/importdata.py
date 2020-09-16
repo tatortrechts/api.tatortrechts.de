@@ -24,6 +24,7 @@ class Command(BaseCommand):
                 chronicle_source=c["chronicle_source"],
                 iso3166_1=c["iso3166_1"],
                 iso3166_2=c["iso3166_2"],
+                region=c["region"],
             )
 
         for location in tqdm(db["locations"].all()):

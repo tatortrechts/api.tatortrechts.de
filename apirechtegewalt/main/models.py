@@ -22,14 +22,17 @@ class Chronicle(models.Model):
     description = models.TextField()
     url = models.CharField(max_length=255)
     chronicle_source = models.CharField(max_length=255)
-    iso3166_1 = models.CharField(max_length=2)
+    iso3166_1 = models.CharField(max_length=2, blank=True, null=True)
     iso3166_2 = models.CharField(max_length=5, blank=True, null=True)
+    region = models.CharField(max_length=255)
 
 
 class Location(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    subdivisions = ArrayField(ArrayField(models.CharField(max_length=255)), null=True, blank=True)
+    subdivisions = ArrayField(
+        ArrayField(models.CharField(max_length=255)), null=True, blank=True
+    )
     location_string = models.CharField(max_length=255, db_index=True, unique=True)
     geolocation = models.PointField(geography=True, default=Point(0.0, 0.0))
 

@@ -15,6 +15,10 @@ class LocationSerializer(serializers.ModelSerializer):
         model = Location
         fields = ["id", "location_string", "subdivisions"]
 
+class LocationStringSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Location
+        fields = ["id", "location_string"]
 
 class SourceSerializer(serializers.ModelSerializer):
     class Meta:

@@ -1,5 +1,10 @@
 from django.contrib.gis.db import models
-from django.contrib.postgres.search import SearchQuery, SearchVector, TrigramSimilarity
+from django.contrib.postgres.search import (
+    SearchQuery,
+    SearchVector,
+    TrigramSimilarity,
+    SearchRank,
+)
 from django.db.models import F
 from django.utils.text import smart_split
 
@@ -19,7 +24,7 @@ class SearchQuerySet(models.QuerySet):
 
         if rank:
             qs = qs.annotate(
-                rank=SearchQuery(F("search_vector"), search_query)
+                rank=SearchRank(F("search_vector"), search_query)
             ).order_by("-rank")
         return qs
 
@@ -42,8 +47,15 @@ class IncidentSearchQuerySet(SearchQuerySet):
 
 class PhrasesQuerySet(SearchQuerySet):
     def search(self, search_text):
-        return super().search(search_text, rank=False, prefix=True)
+        return super().search(search_text, rank=True, prefix=True)
 
     def sync(self):
         self.update(search_vector=SearchVector("option", config="german"))
 
+
+class LocationSearchQuerySet(SearchQuerySet):
+    def search(self, search_text):
+        return super().search(search_text, rank=False, prefix=True)
+
+    def sync(self):
+        self.update(search_vector=SearchVector("location_string", config="german"))

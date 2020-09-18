@@ -4,7 +4,7 @@ from django.contrib.gis.geos import Point
 from django.contrib.postgres.fields import ArrayField
 from django.contrib.postgres.search import SearchVectorField
 
-from .search import IncidentSearchQuerySet, PhrasesQuerySet
+from .search import IncidentSearchQuerySet, PhrasesQuerySet, LocationSearchQuerySet
 
 # can't edit in Admin https://stackoverflow.com/a/1737078/4028896 because of
 #    created_at = models.DateTimeField(auto_now_add=True)
@@ -35,9 +35,11 @@ class Location(models.Model):
     )
     location_string = models.CharField(max_length=255, db_index=True, unique=True)
     geolocation = models.PointField(geography=True, default=Point(0.0, 0.0))
-
     # this is not geographical but speeds up computation for e.g. bounding box check
     geolocation_geometry = models.PointField(default=Point(0.0, 0.0))
+    search_vector = SearchVectorField(null=True)
+
+    objects = LocationSearchQuerySet.as_manager()
 
 
 class Incident(models.Model):
@@ -52,6 +54,7 @@ class Incident(models.Model):
     location = models.ForeignKey("Location", on_delete=models.SET_NULL, null=True)
     chronicle = models.ForeignKey("Chronicle", on_delete=models.SET_NULL, null=True)
     search_vector = SearchVectorField(null=True)
+    phrases = models.ManyToManyField("Phrase")
 
     objects = IncidentSearchQuerySet.as_manager()
 

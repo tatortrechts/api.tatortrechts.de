@@ -79,6 +79,7 @@ class Command(BaseCommand):
 
         self.stdout.write("syncing text vector fields...")
         Incident.objects.sync()
+        Location.objects.sync()
 
         self.stdout.write("syncing autocomplete phrases...")
         generate_phrases()

@@ -21,6 +21,9 @@ router.register(
 router.register(
     r"chronicles", views.ChroniclesViewSet, basename="chronicles",
 )
+router.register(
+    r"locations", views.LocationViewSet, basename="locations",
+)
 
 urlpatterns = [
     path("", include(router.urls)),

@@ -140,7 +140,7 @@ class LocationViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Incident.objects
     serializer_class = LocationStringSerializer
     filterset_class = IncidentFilter
-    pagination_class = SmallFastSetPagination
+    pagination_class = None
 
     def filter_queryset(self, queryset):
         queryset = super().filter_queryset(queryset)
@@ -155,4 +155,4 @@ class LocationViewSet(viewsets.ReadOnlyModelViewSet):
             rs_qs.filter(incident__in=queryset)
             .annotate(total=Count("id"))
             .order_by("-total")
-        )
+        )[:10]

@@ -25,6 +25,7 @@ class IncidentFilter(filters.FilterSet):
     end_date = filters.DateFilter("date", "lt")
     chronicle = filters.ModelMultipleChoiceFilter(queryset=Chronicle.objects.all())
     q = filters.CharFilter(method="search_fulltext")
+    location = filters.CharFilter(field_name="location__location_string")
 
     def search_fulltext(self, queryset, field_name, value):
         return queryset.search(value, rank=False, prefix=True)

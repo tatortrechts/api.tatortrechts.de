@@ -15,10 +15,12 @@ class LocationSerializer(serializers.ModelSerializer):
         model = Location
         fields = ["id", "location_string", "subdivisions"]
 
+
 class LocationStringSerializer(serializers.ModelSerializer):
     class Meta:
         model = Location
-        fields = ["location_string"]
+        fields = ["id", "location_string"]
+
 
 class SourceSerializer(serializers.ModelSerializer):
     class Meta:
@@ -33,7 +35,7 @@ class IncidentsSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Incident
-        exclude = ["search_vector"]
+        exclude = ["search_vector", "phrases"]
 
 
 class AggregatedIncidentsSerializer(GeoFeatureModelSerializer):

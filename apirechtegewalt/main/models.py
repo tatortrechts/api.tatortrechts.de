@@ -30,10 +30,17 @@ class Chronicle(models.Model):
 class Location(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    subdivisions = ArrayField(
-        ArrayField(models.CharField(max_length=255)), null=True, blank=True
-    )
-    location_string = models.CharField(max_length=255, db_index=True, unique=True)
+
+    house_number = models.CharField(max_length=255, null=True)
+    street = models.CharField(max_length=255, null=True)
+    postal_code = models.CharField(max_length=255, null=True)
+    district = models.CharField(max_length=255, null=True)
+    city = models.CharField(max_length=255, null=True)
+    county = models.CharField(max_length=255, null=True)
+    state = models.CharField(max_length=255, null=True)
+    country = models.CharField(max_length=255, null=True)
+
+    location_string = models.TextField(unique=True)
     geolocation = models.PointField(geography=True, default=Point(0.0, 0.0))
     # this is not geographical but speeds up computation for e.g. bounding box check
     geolocation_geometry = models.PointField(default=Point(0.0, 0.0))
@@ -50,7 +57,10 @@ class Incident(models.Model):
     title = models.CharField(max_length=1000, blank=True, default="", null=True)
     description = models.TextField()
     date = models.DateField()
-    iso3166_2 = models.CharField(max_length=5)
+    orig_city = models.CharField(max_length=255, null=True)
+    orig_county = models.CharField(max_length=255, null=True)
+
+
     location = models.ForeignKey("Location", on_delete=models.SET_NULL, null=True)
     chronicle = models.ForeignKey("Chronicle", on_delete=models.SET_NULL, null=True)
     search_vector = SearchVectorField(null=True)

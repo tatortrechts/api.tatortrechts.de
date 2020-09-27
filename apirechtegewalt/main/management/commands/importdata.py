@@ -7,6 +7,18 @@ from ...autocomplete import generate_phrases
 from ...models import Incident, Chronicle, Source, Location
 
 
+location_fields = [
+    "house_number",
+    "street",
+    "postal_code",
+    "district",
+    "city",
+    "county",
+    "state",
+    "country",
+]
+
+
 class Command(BaseCommand):
     help = "Import data from a sqlite db."
 
@@ -29,28 +41,33 @@ class Command(BaseCommand):
 
         for location in tqdm(db["locations"].all()):
             # can't use `update_or_create` for Geo
+            real_loc = {x: location[x] for x in location_fields}
+            real_loc["location_string"] = ", ".join(
+                [x for k, x in real_loc.items() if x is not None]
+            )
 
-            location_str = location["location_string"]
-            sub = eval(location["subdivisions"])
             p = Point(location["longitude"], location["latitude"])
             try:
-                obj = Location.objects.get(location_string=location_str)
+                obj = Location.objects.get(**real_loc)
                 obj.geolocation = p
                 obj.geolocation_geometry = p
-                obj.subdivisions = sub
-                # for key, value in defaults.items():
-                #     setattr(obj, key, value)
+                # not sure about this
+                obj.__dict__.update(real_loc)
                 obj.save()
             except Location.DoesNotExist:
                 obj = Location.objects.create(
-                    location_string=location["location_string"],
-                    geolocation=p,
-                    geolocation_geometry=p,
-                    subdivisions=sub,
+                    geolocation=p, geolocation_geometry=p, **real_loc,
                 )
 
         for incident in tqdm(db["incidents"].all()):
-            l = Location.objects.get(location_string=incident["location_string"])
+            try:
+                l = Location.objects.get(**{x: incident[x] for x in location_fields})
+            except Location.MultipleObjectsReturned:
+                print({x: incident[x] for x in location_fields})
+                print(list(Location.objects.filter(**{x: incident[x] for x in location_fields})))
+                print("error")
+                raise ValueError()
+
             chro = Chronicle.objects.get(name=incident["chronicler_name"])
 
             for x in [
@@ -58,10 +75,8 @@ class Command(BaseCommand):
                 "latitude",
                 "longitude",
                 "point_geom",
-                "location_string",
-                "subdivisions",
                 "chronicler_name",
-            ]:
+            ] + location_fields:
                 del incident[x]
 
             obj, created = Incident.objects.update_or_create(

@@ -13,7 +13,16 @@ class ChroniclesSerializer(serializers.ModelSerializer):
 class LocationSerializer(serializers.ModelSerializer):
     class Meta:
         model = Location
-        fields = ["id", "location_string", "subdivisions"]
+        fields = ["id", "location_string"] + [
+            "house_number",
+            "street",
+            "postal_code",
+            "district",
+            "city",
+            "county",
+            "state",
+            "country",
+        ]
 
 
 class LocationStringSerializer(serializers.ModelSerializer):

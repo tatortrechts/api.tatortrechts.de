@@ -13,6 +13,11 @@ docker-compose run --rm manage  ./manage.py reset_db
 ```
 
 
+```bash
+docker-compose run --rm manage  ./manage.py shell_plus --print-sql
+```
+
+
 
 
 

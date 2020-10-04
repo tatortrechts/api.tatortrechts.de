@@ -103,11 +103,11 @@ class AggregatedIncidentsViewSet(viewsets.ReadOnlyModelViewSet):
 
     def filter_queryset(self, queryset):
         # first apply django-filter
-        queryset = super().filter_queryset(queryset)
+        queryset_ids = super().filter_queryset(queryset).values("id")
 
         # queryset is based on Incident, but we need Location
         return Location.objects.annotate(
-            total=Count("incident", filter=Q(incident__in=queryset))
+            total=Count("incident", filter=Q(incident__in=queryset_ids))
         ).filter(total__gt=0)
 
 

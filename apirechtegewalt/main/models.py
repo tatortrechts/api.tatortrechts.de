@@ -1,7 +1,6 @@
 from django.contrib.auth.models import AbstractUser
 from django.contrib.gis.db import models
 from django.contrib.gis.geos import Point
-from django.contrib.postgres.fields import ArrayField
 from django.contrib.postgres.search import SearchVectorField
 
 from .search import IncidentSearchQuerySet, PhrasesQuerySet, LocationSearchQuerySet
@@ -59,7 +58,6 @@ class Incident(models.Model):
     date = models.DateField()
     orig_city = models.CharField(max_length=255, null=True)
     orig_county = models.CharField(max_length=255, null=True)
-
 
     location = models.ForeignKey("Location", on_delete=models.SET_NULL, null=True)
     chronicle = models.ForeignKey("Chronicle", on_delete=models.SET_NULL, null=True)

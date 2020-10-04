@@ -23,15 +23,23 @@ docker-compose run --rm manage  ./manage.py shell_plus --print-sql
 
 The alpine version of postgis does not work together with Dokku.
 
-```
+```bash
 sudo dokku postgres:create apirg-db -i "postgis/postgis" -I "11-3.0"
 ```
 
+## Deployment
 
 
-
-
+```bash
+sudo dokku run apirg ./manage.py reset_db
 ```
+
+```bash
+sudo dokku run apirg ./manage.py migrate
+```
+
+
+```bash
 sudo dokku run apirg ./manage.py importdata /importdata/rechtegewalt.db
 ```
 

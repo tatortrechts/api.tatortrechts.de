@@ -196,4 +196,5 @@ misc/dbdata/
 _static/
 report.xml
 
-importdata
+misc/importdata
+getdata.sh

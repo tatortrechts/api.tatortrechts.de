@@ -1,0 +1,18 @@
+{% load static wagtailcore_tags wagtailimages_tags %}
+<!DOCTYPE html>
+<html>
+    <head></head>
+    <body>
+        {% with blocks=self.body %}
+            {% for block in blocks %}
+                {% if block.block_type == 'heading' %}
+                    <h1>{{ block.value }}</h1>
+                {% else %}
+                    <section class="block-{{ block.block_type }}">
+                        {% include_block block %}
+                    </section>
+                {% endif %}
+            {% endfor %}
+        {% endwith %}
+    </body>
+</html>

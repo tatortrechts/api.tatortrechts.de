@@ -40,6 +40,19 @@ DEFAULT_FROM_EMAIL = "me@mydomain.com"
 # Application definition
 
 INSTALLED_APPS = [
+    "wagtail.contrib.forms",
+    "wagtail.contrib.redirects",
+    "wagtail.embeds",
+    "wagtail.sites",
+    "wagtail.users",
+    "wagtail.snippets",
+    "wagtail.documents",
+    "wagtail.images",
+    "wagtail.search",
+    "wagtail.admin",
+    "wagtail.core",
+    "modelcluster",
+    "taggit",
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
@@ -55,9 +68,11 @@ INSTALLED_APPS = [
     "rest_framework",
     "rest_framework_gis",
     "apirechtegewalt.main",
+    "apirechtegewalt.cms",
 ]
 
 MIDDLEWARE = [
+    'wagtail.contrib.redirects.middleware.RedirectMiddleware',
     "corsheaders.middleware.CorsMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.security.SecurityMiddleware",
@@ -222,6 +237,11 @@ STATIC_URL = "/static/"
 STATIC_ROOT = os.path.join(BASE_DIR, "_static")
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 STATICFILES_DIRS = [os.path.join(BASE_DIR, "static")]
+
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_URL = '/media/'
+
+WAGTAIL_SITE_NAME = 'api.rechtegewalt.info'
 
 REST_FRAMEWORK = {
     "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.LimitOffsetPagination",

@@ -4,6 +4,7 @@ from wagtail.core import blocks
 from wagtail.core.fields import StreamField
 from wagtail.core.models import Page
 from wagtail.images.blocks import ImageChooserBlock
+from wagtail.api import APIField
 
 
 class ColumnBlock(blocks.StreamBlock):
@@ -38,4 +39,9 @@ class ContentPage(Page):
 
     content_panels = Page.content_panels + [
         StreamFieldPanel("body"),
+    ]
+
+    # Export fields over the API
+    api_fields = [
+        APIField("body"),
     ]

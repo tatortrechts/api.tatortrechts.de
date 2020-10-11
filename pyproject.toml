@@ -5,7 +5,7 @@ description = ""
 authors = []
 
 [tool.poetry.dependencies]
-python = ">=3.8"
+python = "3.8.*"
 django = ">=3.1"
 djangorestframework="^3.10.0"
 djangorestframework-gis="^0.15.0"
@@ -21,7 +21,7 @@ whitenoise = "*"
 dataset="*"
 tqdm="*"
 markdown="*"
-wagtail="*"
+wagtail="^2.10"
 
 [tool.poetry.dev-dependencies]
 werkzeug = "*" # used for local development server

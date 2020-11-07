@@ -28,7 +28,7 @@ class Command(BaseCommand):
     def handle(self, db_path, *args, **options):
         db = dataset.connect("sqlite:///" + db_path)
 
-        for c in tqdm(db["chronicles"].all()):
+        for c in tqdm(db["chronicles"].all(), desc="updating chronicles"):
             obj, created = Chronicle.objects.update_or_create(
                 name=c["chronicler_name"],
                 description=c["chronicler_description"],
@@ -39,7 +39,7 @@ class Command(BaseCommand):
                 region=c["region"],
             )
 
-        for location in tqdm(db["locations"].all()):
+        for location in tqdm(db["locations"].all(), desc="updating location"):
             # can't use `update_or_create` for Geo
             real_loc = {x: location[x] for x in location_fields}
             real_loc["location_string"] = ", ".join(
@@ -56,15 +56,23 @@ class Command(BaseCommand):
                 obj.save()
             except Location.DoesNotExist:
                 obj = Location.objects.create(
-                    geolocation=p, geolocation_geometry=p, **real_loc,
+                    geolocation=p,
+                    geolocation_geometry=p,
+                    **real_loc,
                 )
 
-        for incident in tqdm(db["incidents"].all()):
+        for incident in tqdm(db["incidents"].all(), desc="updating incidents"):
             try:
                 l = Location.objects.get(**{x: incident[x] for x in location_fields})
             except Location.MultipleObjectsReturned:
                 print({x: incident[x] for x in location_fields})
-                print(list(Location.objects.filter(**{x: incident[x] for x in location_fields})))
+                print(
+                    list(
+                        Location.objects.filter(
+                            **{x: incident[x] for x in location_fields}
+                        )
+                    )
+                )
                 print("error")
                 raise ValueError()
 
@@ -83,7 +91,7 @@ class Command(BaseCommand):
                 location=l, chronicle=chro, **incident
             )
 
-        for source in tqdm(db["sources"].all()):
+        for source in tqdm(db["sources"].all(), desc="updating sources"):
             try:
                 incident = Incident.objects.get(rg_id=source["rg_id"])
             except Incident.DoesNotExist:

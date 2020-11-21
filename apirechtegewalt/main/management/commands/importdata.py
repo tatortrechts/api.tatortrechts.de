@@ -75,6 +75,9 @@ class Command(BaseCommand):
                 )
                 print("error")
                 raise ValueError()
+            except Location.DoesNotExist:
+                print("skipping over this item, could not find location ", incident)
+                continue
 
             chro = Chronicle.objects.get(name=incident["chronicler_name"])
 

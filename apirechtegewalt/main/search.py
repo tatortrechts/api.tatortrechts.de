@@ -1,9 +1,9 @@
 from django.contrib.gis.db import models
 from django.contrib.postgres.search import (
     SearchQuery,
+    SearchRank,
     SearchVector,
     TrigramSimilarity,
-    SearchRank,
 )
 from django.db.models import F
 from django.utils.text import smart_split

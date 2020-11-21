@@ -9,13 +9,13 @@ from django_filters import rest_framework as filters
 from rest_framework import viewsets
 from rest_framework.pagination import PageNumberPagination
 
-from .models import Incident, Location, Phrase, Chronicle
+from .models import Chronicle, Incident, Location, Phrase
 from .serializers import (
     AggregatedIncidentsSerializer,
     AutocompleteSerializer,
-    IncidentsSerializer,
-    HistogramIncidentsSerializer,
     ChroniclesSerializer,
+    HistogramIncidentsSerializer,
+    IncidentsSerializer,
     LocationStringSerializer,
 )
 

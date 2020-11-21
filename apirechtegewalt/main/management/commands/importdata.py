@@ -4,8 +4,7 @@ from django.core.management.base import BaseCommand, CommandError
 from tqdm import tqdm
 
 from ...autocomplete import generate_phrases
-from ...models import Incident, Chronicle, Source, Location
-
+from ...models import Chronicle, Incident, Location, Source
 
 location_fields = [
     "house_number",

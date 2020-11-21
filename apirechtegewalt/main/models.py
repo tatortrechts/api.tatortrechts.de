@@ -3,7 +3,7 @@ from django.contrib.gis.db import models
 from django.contrib.gis.geos import Point
 from django.contrib.postgres.search import SearchVectorField
 
-from .search import IncidentSearchQuerySet, PhrasesQuerySet, LocationSearchQuerySet
+from .search import IncidentSearchQuerySet, LocationSearchQuerySet, PhrasesQuerySet
 
 # can't edit in Admin https://stackoverflow.com/a/1737078/4028896 because of
 #    created_at = models.DateTimeField(auto_now_add=True)

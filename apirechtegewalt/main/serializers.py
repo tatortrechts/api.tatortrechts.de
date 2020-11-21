@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from rest_framework_gis.serializers import GeoFeatureModelSerializer
 
-from .models import Incident, Location, Source, Chronicle
+from .models import Chronicle, Incident, Location, Source
 
 
 class ChroniclesSerializer(serializers.ModelSerializer):
@@ -63,4 +63,3 @@ class AutocompleteSerializer(serializers.Serializer):
 class HistogramIncidentsSerializer(serializers.Serializer):
     month = serializers.DateField()
     total = serializers.IntegerField()
-

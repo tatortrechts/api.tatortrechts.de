@@ -21,7 +21,7 @@ whitenoise = "*"
 dataset="*"
 tqdm="*"
 markdown="*"
-wagtail="^2.10"
+wagtail = "^2.11.2"
 
 [tool.poetry.dev-dependencies]
 werkzeug = "*" # used for local development server

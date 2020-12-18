@@ -31,7 +31,7 @@ DEBUG = True if os.getenv("NODEBUG") is None else False
 ALLOWED_HOSTS = (
     ["*"]
     if os.getenv("NODEBUG") is None
-    else [".apirg.app.vis.one", ".api.rechtegewalt.info"]
+    else [".api.tatortrechts.de"]
 )
 
 # TODO: Change the default "from" email here.
@@ -242,7 +242,7 @@ STATICFILES_DIRS = [os.path.join(BASE_DIR, "static")]
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 MEDIA_URL = "/media/"
 
-WAGTAIL_SITE_NAME = "api.rechtegewalt.info"
+WAGTAIL_SITE_NAME = "Content for api.tatortrechts.de"
 
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": (

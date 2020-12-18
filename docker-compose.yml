@@ -3,12 +3,13 @@ version: "3"
 services:
     redis:
         image: redis:6-alpine
+
     db:
         image: postgis/postgis:11-3.0-alpine
         environment:
             POSTGRES_PASSWORD: password
-        volumes:
-            - ./misc/dbdata:/var/lib/postgresql/data:delegated
+        ports:
+            - "5432:5432"
 
     web:
         command: ./manage.py runserver 0.0.0.0:8000

@@ -61,5 +61,6 @@ class AutocompleteSerializer(serializers.Serializer):
 
 
 class HistogramIncidentsSerializer(serializers.Serializer):
-    month = serializers.DateField()
+    date_histogram = serializers.DateField()
+    time_interval = serializers.CharField()
     total = serializers.IntegerField()

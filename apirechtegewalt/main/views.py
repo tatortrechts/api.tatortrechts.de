@@ -1,7 +1,14 @@
 from django.contrib.gis.geos import Polygon
 from django.core.paginator import Paginator
-from django.db.models import Count, Q
-from django.db.models.functions import TruncMonth
+from django.db.models import Count, Q, Value
+from django.db.models.fields import CharField
+from django.db.models.functions import (
+    TruncDay,
+    TruncMonth,
+    TruncQuarter,
+    TruncWeek,
+    TruncYear,
+)
 from django.utils.decorators import method_decorator
 from django.utils.functional import cached_property
 from django.views.decorators.cache import cache_page
@@ -87,11 +94,66 @@ class HistogramIncidentsViewSet(IncidentsViewSet):
 
     def filter_queryset(self, queryset):
         queryset = super().filter_queryset(queryset)
+        num_results = queryset.count()
+
+        if num_results == 0:
+            return queryset
+
+        early = queryset.earliest("date").date
+        latest = queryset.latest("date").date
+        time_diff = latest - early
+
+        if num_results > 5000:
+            return (
+                queryset.annotate(date_histogram=TruncYear("date"))
+                .values("date_histogram")
+                .order_by("date_histogram")
+                .annotate(
+                    total=Count("date_histogram"),
+                    time_interval=Value("year", CharField()),
+                )
+            )
+
+        if num_results > 1000 or time_diff.days > 5 * 365:
+            return (
+                queryset.annotate(date_histogram=TruncQuarter("date"))
+                .values("date_histogram")
+                .order_by("date_histogram")
+                .annotate(
+                    total=Count("date_histogram"),
+                    time_interval=Value("quarter", CharField()),
+                )
+            )
+
+        if time_diff.days > 365:
+            return (
+                queryset.annotate(date_histogram=TruncMonth("date"))
+                .values("date_histogram")
+                .order_by("date_histogram")
+                .annotate(
+                    total=Count("date_histogram"),
+                    time_interval=Value("month", CharField()),
+                )
+            )
+
+        if time_diff.days > 90:
+            return (
+                queryset.annotate(date_histogram=TruncWeek("date"))
+                .values("date_histogram")
+                .order_by("date_histogram")
+                .annotate(
+                    total=Count("date_histogram"),
+                    time_interval=Value("week", CharField()),
+                )
+            )
+
         return (
-            queryset.annotate(month=TruncMonth("date"))
-            .values("month")
-            .order_by("month")
-            .annotate(total=Count("month"))
+            queryset.annotate(date_histogram=TruncDay("date"))
+            .values("date_histogram")
+            .order_by("date_histogram")
+            .annotate(
+                total=Count("date_histogram"), time_interval=Value("day", CharField())
+            )
         )
 
 

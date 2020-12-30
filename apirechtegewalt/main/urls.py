@@ -24,6 +24,7 @@ router.register(
 router.register(
     r"locations", views.LocationViewSet, basename="locations",
 )
+router.register(r'min_max_date', views.MinMaxDateViewSet, basename='min_max_date')
 
 urlpatterns = [
     path("", include(router.urls)),

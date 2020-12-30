@@ -2,29 +2,19 @@ from django.contrib.gis.geos import Polygon
 from django.core.paginator import Paginator
 from django.db.models import Count, Q, Value
 from django.db.models.fields import CharField
-from django.db.models.functions import (
-    TruncDay,
-    TruncMonth,
-    TruncQuarter,
-    TruncWeek,
-    TruncYear,
-)
+from django.db.models.functions import TruncDay, TruncMonth, TruncQuarter, TruncWeek, TruncYear
 from django.utils.decorators import method_decorator
 from django.utils.functional import cached_property
 from django.views.decorators.cache import cache_page
 from django_filters import rest_framework as filters
 from rest_framework import viewsets
 from rest_framework.pagination import PageNumberPagination
+from rest_framework.response import Response
 
 from .models import Chronicle, Incident, Location, Phrase
-from .serializers import (
-    AggregatedIncidentsSerializer,
-    AutocompleteSerializer,
-    ChroniclesSerializer,
-    HistogramIncidentsSerializer,
-    IncidentsSerializer,
-    LocationStringSerializer,
-)
+from .serializers import (AggregatedIncidentsSerializer, AutocompleteSerializer, ChroniclesSerializer,
+                          HistogramIncidentsSerializer, IncidentsSerializer, LocationStringSerializer,
+                          )
 
 
 class IncidentFilter(filters.FilterSet):
@@ -83,7 +73,7 @@ class IncidentsViewSet(viewsets.ReadOnlyModelViewSet):
         return queryset.order_by("-date")
 
     # cache for 10 minutes
-    # @method_decorator(cache_page(60 * 10))
+    @method_decorator(cache_page(60 * 10))
     def dispatch(self, request, *args, **kwargs):
         return super().dispatch(request, *args, **kwargs)
 
@@ -219,3 +209,9 @@ class LocationViewSet(viewsets.ReadOnlyModelViewSet):
             .annotate(total=Count("id"))
             .order_by("-total")
         )[:10]
+
+class MinMaxDateViewSet(viewsets.ViewSet):
+    def list(self, response):
+        min_date = Incident.objects.earliest('date').date
+        max_date = Incident.objects.latest('date').date
+        return Response({'min_date': min_date, 'max_date': max_date})

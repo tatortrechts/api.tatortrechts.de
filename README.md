@@ -1,4 +1,4 @@
-# `api.rechtegewalt.info`
+# `api.tatortrechts.de`
 
 Based on [django-startproject-docker-dokku](https://github.com/jfilter/django-startproject-docker-dokku).
 
@@ -51,6 +51,14 @@ sudo dokku run api ./manage.py migrate
 ```bash
 sudo dokku run api ./manage.py importdata /importdata/rechtegewalt.db
 ```
+
+## CMS
+
+We are using [WagTail](https://wagtail.io/) as a headless CMS.
+You need to create pages with the following sluges to make the frontend work:
+
+- `home`
+- `hintergrund`
 
 ## License
 

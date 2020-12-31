@@ -22,6 +22,7 @@ class LocationSerializer(serializers.ModelSerializer):
             "county",
             "state",
             "country",
+            "geolocation"
         ]
 
 

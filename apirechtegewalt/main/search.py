@@ -8,24 +8,38 @@ from django.contrib.postgres.search import (
 from django.db.models import F
 from django.utils.text import smart_split
 
+from cleantext import clean
+
+
+def split_proximity(text):
+    text = text.replace("*", "").replace(":", "").replace("'", '"')
+    tokens = smart_split(text)
+
+    for t in tokens:
+        t_cl = clean(t, lang="de", lower=False, no_punct=False)
+        t_cl_p = clean(t, lang="de", lower=False, no_punct=True)
+
+        if t_cl.lower() == "or":
+            continue
+        if " " in t or '"' in t_cl:
+            yield "' " + t_cl_p.replace(" ", " <-> ") + " '"
+        else:
+            yield t_cl_p + ":*"
+
 
 class SearchQuerySet(models.QuerySet):
-    def search(self, search_text, rank=True, prefix=False, prefix_and=True):
+    def search(
+        self,
+        search_text,
+        rank=True,
+        prefix=True,
+    ):
+        if prefix:
+            conj = " & " if not " or " in search_text.lower() else " | "
 
-        implicit_prefix = "*" in search_text
-        # force prefix search if
-        if prefix or implicit_prefix:
-            conj = " & " if prefix_and else " | "
-
-            if prefix:
-                # prepend wildcard to all tokens
-                search_text = conj.join(
-                    [x + ":*" for x in smart_split(search_text.replace("*", ""))]
-                )
-            elif implicit_prefix:
-                search_text = conj.join(
-                    [x.replace('*', ':*') for x in smart_split(search_text)]
-                )
+            # prepend wildcard to all tokens
+            search_text = conj.join(split_proximity(search_text))
+            print(search_text)
 
             search_query = SearchQuery(search_text, config="german", search_type="raw")
 
@@ -60,16 +74,10 @@ class IncidentSearchQuerySet(SearchQuerySet):
 
 
 class PhrasesQuerySet(SearchQuerySet):
-    def search(self, search_text):
-        return super().search(search_text, rank=True, prefix=True)
-
     def sync(self):
         self.update(search_vector=SearchVector("option", config="german"))
 
 
 class LocationSearchQuerySet(SearchQuerySet):
-    def search(self, search_text):
-        return super().search(search_text, rank=False, prefix=True)
-
     def sync(self):
         self.update(search_vector=SearchVector("location_string", config="german"))

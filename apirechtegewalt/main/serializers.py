@@ -22,7 +22,7 @@ class LocationSerializer(serializers.ModelSerializer):
             "county",
             "state",
             "country",
-            "geolocation"
+            "geolocation",
         ]
 
 
@@ -53,7 +53,16 @@ class AggregatedIncidentsSerializer(GeoFeatureModelSerializer):
 
     class Meta:
         model = Location
-        fields = ["id", "geolocation", "total", "house_number", "street", "district", "city", "county"]
+        fields = [
+            "id",
+            "geolocation",
+            "total",
+            "house_number",
+            "street",
+            "district",
+            "city",
+            "county",
+        ]
         geo_field = "geolocation"
 
 

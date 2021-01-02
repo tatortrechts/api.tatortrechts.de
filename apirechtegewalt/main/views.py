@@ -2,7 +2,13 @@ from django.contrib.gis.geos import Polygon
 from django.core.paginator import Paginator
 from django.db.models import Count, Q, Value
 from django.db.models.fields import CharField
-from django.db.models.functions import TruncDay, TruncMonth, TruncQuarter, TruncWeek, TruncYear
+from django.db.models.functions import (
+    TruncDay,
+    TruncMonth,
+    TruncQuarter,
+    TruncWeek,
+    TruncYear,
+)
 from django.utils.decorators import method_decorator
 from django.utils.functional import cached_property
 from django.views.decorators.cache import cache_page
@@ -12,9 +18,14 @@ from rest_framework.pagination import PageNumberPagination
 from rest_framework.response import Response
 
 from .models import Chronicle, Incident, Location, Phrase
-from .serializers import (AggregatedIncidentsSerializer, AutocompleteSerializer, ChroniclesSerializer,
-                          HistogramIncidentsSerializer, IncidentsSerializer, LocationStringSerializer,
-                          )
+from .serializers import (
+    AggregatedIncidentsSerializer,
+    AutocompleteSerializer,
+    ChroniclesSerializer,
+    HistogramIncidentsSerializer,
+    IncidentsSerializer,
+    LocationStringSerializer,
+)
 
 
 class IncidentFilter(filters.FilterSet):
@@ -25,16 +36,17 @@ class IncidentFilter(filters.FilterSet):
     location = filters.CharFilter(field_name="location__id")
 
     def search_fulltext(self, queryset, field_name, value):
-        return queryset.search(value, rank=False, prefix=False)
+        return queryset.search(value)
 
     class Meta:
         model = Incident
         fields = ["location", "start_date", "end_date"]
 
+
 class AutocompleteIncidentFilter(IncidentFilter):
     # force prefix search
     def search_fulltext(self, queryset, field_name, value):
-        return queryset.search(value, rank=False, prefix=True)
+        return queryset.search(value)
 
 
 class CacheCountPaginator(Paginator):
@@ -178,10 +190,13 @@ class AutocompleteViewSet(viewsets.ReadOnlyModelViewSet):
         queryset = super().filter_queryset(queryset)
         search_term = self.request.query_params.get("q")
         suggestions = (
-            Phrase.objects.search(search_term).filter(incident__in=queryset).distinct().order_by('-count')[:10]
+            Phrase.objects.search(search_term)
+            .filter(incident__in=queryset)
+            .distinct()
+            .order_by("-count")[:10]
         )
         # order the 10 best matching for lenght of sentence
-        return sorted(suggestions[:10], key=lambda x:len(x.option))
+        return sorted(suggestions[:10], key=lambda x: len(x.option))
 
 
 class ChroniclesViewSet(viewsets.ReadOnlyModelViewSet):
@@ -211,8 +226,9 @@ class LocationViewSet(viewsets.ReadOnlyModelViewSet):
             .order_by("-total")
         )[:10]
 
+
 class MinMaxDateViewSet(viewsets.ViewSet):
     def list(self, response):
-        min_date = Incident.objects.earliest('date').date
-        max_date = Incident.objects.latest('date').date
-        return Response({'min_date': min_date, 'max_date': max_date})
+        min_date = Incident.objects.earliest("date").date
+        max_date = Incident.objects.latest("date").date
+        return Response({"min_date": min_date, "max_date": max_date})

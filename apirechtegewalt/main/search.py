@@ -10,11 +10,25 @@ from django.utils.text import smart_split
 
 
 class SearchQuerySet(models.QuerySet):
-    def search(self, search_text, rank=True, prefix=False):
-        if prefix:
-            # prepend wildcard to all tokens
-            search_text = " & ".join([x + ":*" for x in smart_split(search_text)])
+    def search(self, search_text, rank=True, prefix=False, prefix_and=True):
+
+        implicit_prefix = "*" in search_text
+        # force prefix search if
+        if prefix or implicit_prefix:
+            conj = " & " if prefix_and else " | "
+
+            if prefix:
+                # prepend wildcard to all tokens
+                search_text = conj.join(
+                    [x + ":*" for x in smart_split(search_text.replace("*", ""))]
+                )
+            elif implicit_prefix:
+                search_text = conj.join(
+                    [x.replace('*', ':*') for x in smart_split(search_text)]
+                )
+
             search_query = SearchQuery(search_text, config="german", search_type="raw")
+
         else:
             search_query = SearchQuery(
                 search_text, config="german", search_type="websearch"

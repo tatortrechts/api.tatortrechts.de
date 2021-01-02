@@ -25,14 +25,14 @@ class IncidentFilter(filters.FilterSet):
     location = filters.CharFilter(field_name="location__id")
 
     def search_fulltext(self, queryset, field_name, value):
-        return queryset.search(value, rank=False, prefix=True)
+        return queryset.search(value, rank=False, prefix=False)
 
     class Meta:
         model = Incident
         fields = ["location", "start_date", "end_date"]
 
-
 class AutocompleteIncidentFilter(IncidentFilter):
+    # force prefix search
     def search_fulltext(self, queryset, field_name, value):
         return queryset.search(value, rank=False, prefix=True)
 
@@ -178,9 +178,10 @@ class AutocompleteViewSet(viewsets.ReadOnlyModelViewSet):
         queryset = super().filter_queryset(queryset)
         search_term = self.request.query_params.get("q")
         suggestions = (
-            Phrase.objects.search(search_term).filter(incident__in=queryset).distinct()
+            Phrase.objects.search(search_term).filter(incident__in=queryset).distinct().order_by('-count')[:10]
         )
-        return sorted(suggestions[:10], key=lambda x: len(x.option))
+        # order the 10 best matching for lenght of sentence
+        return sorted(suggestions[:10], key=lambda x:len(x.option))
 
 
 class ChroniclesViewSet(viewsets.ReadOnlyModelViewSet):

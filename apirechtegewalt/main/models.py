@@ -2,6 +2,7 @@ from django.contrib.auth.models import AbstractUser
 from django.contrib.gis.db import models
 from django.contrib.gis.geos import Point
 from django.contrib.postgres.search import SearchVectorField
+from django.contrib.postgres.indexes import GinIndex
 
 from .search import IncidentSearchQuerySet, LocationSearchQuerySet, PhrasesQuerySet
 
@@ -47,6 +48,9 @@ class Location(models.Model):
 
     objects = LocationSearchQuerySet.as_manager()
 
+    class Meta(object):
+        indexes = [GinIndex(fields=["search_vector"])]
+
 
 class Incident(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
@@ -66,6 +70,9 @@ class Incident(models.Model):
 
     objects = IncidentSearchQuerySet.as_manager()
 
+    class Meta(object):
+        indexes = [GinIndex(fields=["search_vector"])]
+
 
 class Source(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
@@ -83,3 +90,6 @@ class Phrase(models.Model):
     search_vector = SearchVectorField(null=True)
 
     objects = PhrasesQuerySet.as_manager()
+
+    class Meta(object):
+        indexes = [GinIndex(fields=["search_vector"])]

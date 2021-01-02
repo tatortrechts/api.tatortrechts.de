@@ -39,6 +39,8 @@ class SourceSerializer(serializers.ModelSerializer):
 
 
 class IncidentsSerializer(serializers.ModelSerializer):
+    description_highlighted = serializers.CharField(allow_null=True, required=False)
+    title_highlighted = serializers.CharField(allow_null=True, required=False)
     location = LocationSerializer(read_only=True)
     chronicle = ChroniclesSerializer(read_only=True)
     sources = SourceSerializer(source="source_set", many=True, read_only=True)
@@ -46,6 +48,17 @@ class IncidentsSerializer(serializers.ModelSerializer):
     class Meta:
         model = Incident
         exclude = ["search_vector", "phrases"]
+
+    def __init__(self, *args, **kwargs):
+        # when searching, only return highlighted results
+        request = kwargs.get("context", {}).get("request")
+        is_searching = request.GET.get("q", None) if request else None
+
+        super(IncidentsSerializer, self).__init__(*args, **kwargs)
+
+        if is_searching:
+            self.fields.pop("description")
+            self.fields.pop("title")
 
 
 class AggregatedIncidentsSerializer(GeoFeatureModelSerializer):

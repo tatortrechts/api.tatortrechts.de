@@ -5,7 +5,7 @@ services:
         image: redis:6-alpine
 
     db:
-        image: postgis/postgis:11-3.0-alpine
+        image: postgis/postgis:11-3.1-alpine
         environment:
             POSTGRES_PASSWORD: password
         ports:

@@ -1,5 +1,7 @@
+from cleantext import clean
 from django.contrib.gis.db import models
 from django.contrib.postgres.search import (
+    SearchHeadline,
     SearchQuery,
     SearchRank,
     SearchVector,
@@ -8,10 +10,9 @@ from django.contrib.postgres.search import (
 from django.db.models import F
 from django.utils.text import smart_split
 
-from cleantext import clean
-
 
 def split_proximity(text):
+    # TODO: add not / - option
     text = text.replace("*", "").replace(":", "").replace("'", '"')
     tokens = smart_split(text)
 
@@ -28,12 +29,7 @@ def split_proximity(text):
 
 
 class SearchQuerySet(models.QuerySet):
-    def search(
-        self,
-        search_text,
-        rank=True,
-        prefix=True,
-    ):
+    def search(self, search_text, rank=True, prefix=True, highlight=False):
         if prefix:
             conj = " & " if not " or " in search_text.lower() else " | "
 
@@ -54,6 +50,17 @@ class SearchQuerySet(models.QuerySet):
             qs = qs.annotate(
                 rank=SearchRank(F("search_vector"), search_query)
             ).order_by("-rank")
+
+        if highlight:
+            qs = qs.annotate(
+                description_highlighted=SearchHeadline(
+                    "description", search_query, config="german", highlight_all=True
+                ),
+                title_highlighted=SearchHeadline(
+                    "title", search_query, config="german", highlight_all=True
+                ),
+            )
+
         return qs
 
     # can't use trigram because of the postgis image
@@ -66,6 +73,9 @@ class SearchQuerySet(models.QuerySet):
 
 
 class IncidentSearchQuerySet(SearchQuerySet):
+    def search(self, search_text):
+        return super().search(search_text, highlight=True)
+
     def sync(self):
         self.update(
             search_vector=SearchVector("title", weight="A", config="german")

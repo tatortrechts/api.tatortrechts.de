@@ -231,4 +231,5 @@ class MinMaxDateViewSet(viewsets.ViewSet):
     def list(self, response):
         min_date = Incident.objects.earliest("date").date
         max_date = Incident.objects.latest("date").date
-        return Response({"min_date": min_date, "max_date": max_date})
+        total = Incident.objects.count()
+        return Response({"min_date": min_date, "max_date": max_date, "total": total})

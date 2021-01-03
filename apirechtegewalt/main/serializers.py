@@ -13,7 +13,8 @@ class ChroniclesSerializer(serializers.ModelSerializer):
 class LocationSerializer(serializers.ModelSerializer):
     class Meta:
         model = Location
-        fields = ["id", "location_string"] + [
+        fields = [
+            "id",
             "house_number",
             "street",
             "postal_code",
@@ -21,7 +22,6 @@ class LocationSerializer(serializers.ModelSerializer):
             "city",
             "county",
             "state",
-            "country",
             "geolocation",
         ]
 
@@ -29,7 +29,15 @@ class LocationSerializer(serializers.ModelSerializer):
 class LocationStringSerializer(serializers.ModelSerializer):
     class Meta:
         model = Location
-        fields = ["id", "location_string"]
+        fields = [
+            "id",
+            "house_number",
+            "street",
+            "postal_code",
+            "district",
+            "city",
+            "county",
+        ]
 
 
 class SourceSerializer(serializers.ModelSerializer):

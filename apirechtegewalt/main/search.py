@@ -30,13 +30,12 @@ def split_proximity(text):
 
 class SearchQuerySet(models.QuerySet):
     def search(self, search_text, rank=True, prefix=True, highlight=False):
+        if search_text is None:
+            return self
+
         if prefix:
             conj = " & " if not " or " in search_text.lower() else " | "
-
-            # prepend wildcard to all tokens
             search_text = conj.join(split_proximity(search_text))
-            print(search_text)
-
             search_query = SearchQuery(search_text, config="german", search_type="raw")
 
         else:

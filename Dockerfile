@@ -14,7 +14,6 @@ WORKDIR /code
 
 RUN /bin/bash -c '[[ -z "${IN_DOCKER}" ]] && poetry install --no-interaction --no-root || poetry install --no-dev --no-interaction --no-root'
 
-
 ADD dokku/CHECKS /app/
 ADD dokku/* /code/
 

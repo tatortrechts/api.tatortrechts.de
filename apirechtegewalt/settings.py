@@ -28,11 +28,7 @@ SECRET_KEY = os.getenv("SECRET_KEY", "override me")
 DEBUG = True if os.getenv("NODEBUG") is None else False
 
 # TODO: Change your domain names here.
-ALLOWED_HOSTS = (
-    ["*"]
-    if os.getenv("NODEBUG") is None
-    else [".api.tatortrechts.de"]
-)
+ALLOWED_HOSTS = ["*"] if os.getenv("NODEBUG") is None else [".api.tatortrechts.de"]
 
 # TODO: Change the default "from" email here.
 DEFAULT_FROM_EMAIL = "me@mydomain.com"
@@ -172,6 +168,10 @@ elif os.getenv("DATABASE_URL"):
     SESSION_ENGINE = "django.contrib.sessions.backends.cache"
     SESSION_COOKIE_AGE = 365 * 24 * 60 * 60
     SESSION_COOKIE_SECURE = True
+
+    SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
+
+
 else:
     print(
         "Can't connect to the database right now since environment variables are missing."

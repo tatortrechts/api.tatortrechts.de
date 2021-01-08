@@ -52,13 +52,17 @@ sudo dokku run api ./manage.py migrate
 sudo dokku run api ./manage.py importdata /importdata/rechtegewalt.db
 ```
 
+```bash
+sudo dokku run api ./manage.py syncautocomplete
+```
+
 ## CMS
 
 We are using [WagTail](https://wagtail.io/) as a headless CMS.
 You need to create pages with the following sluges to make the frontend work:
 
-- `home`
-- `hintergrund`
+-   `home`
+-   `hintergrund`
 
 ## License
 

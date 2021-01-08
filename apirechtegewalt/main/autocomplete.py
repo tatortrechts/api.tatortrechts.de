@@ -65,7 +65,12 @@ zurück zusammen zwanzig zwar zwei zweite zweiten zweiter zweites zwischen
 """.split()
 
 
-STOP_WORDS = set(STOP_WORDS_SPACY)
+STOP_WORDS = (
+    STOP_WORDS_SPACY
+    + "Mann Täter Gruppe Polizei Personen Angreifer Unbekannte Frau Männer Betroffenen Jugendliche Jugendlichen".lower().split()
+)
+
+STOP_WORDS = set(STOP_WORDS)
 
 
 def find_ngrams(input_list, n):

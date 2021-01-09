@@ -67,7 +67,7 @@ zurück zusammen zwanzig zwar zwei zweite zweiten zweiter zweites zwischen
 
 STOP_WORDS = (
     STOP_WORDS_SPACY
-    + "Mann Täter Gruppe Polizei Personen Angreifer Unbekannte Frau Männer Betroffenen Jugendliche Jugendlichen".lower().split()
+    + "Mann Täter Gruppe Polizei Personen Angreifer Unbekannte Frau Männer Betroffenen Jugendliche Jugendlichen Straße".lower().split()
 )
 
 STOP_WORDS = set(STOP_WORDS)

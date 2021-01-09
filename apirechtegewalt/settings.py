@@ -243,6 +243,7 @@ MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 MEDIA_URL = "/media/"
 
 WAGTAIL_SITE_NAME = "Content for api.tatortrechts.de"
+WAGTAILIMAGES_IMAGE_MODEL = "cms.CustomImage"
 
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": (

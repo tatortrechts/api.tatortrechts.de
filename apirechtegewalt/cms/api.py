@@ -43,5 +43,11 @@ class ContentPagesAPIViewSet(BaseAPIViewSet):
     ]
 
 
+class CustomImagesAPIViewset(ImagesAPIViewSet):
+    def __init__(self):
+        ImagesAPIViewSet.__init__(self)
+        self.meta_fields += ["caption"]
+
+
 api_router.register_endpoint("pages", ContentPagesAPIViewSet)
-api_router.register_endpoint("images", ImagesAPIViewSet)
+api_router.register_endpoint("images", CustomImagesAPIViewset)

@@ -58,7 +58,7 @@ class TwoColumnBlock(blocks.StructBlock):
 
 class PageLayout(models.TextChoices):
     FULL_CONTAINER = "FC", "Full-width container"
-    CENTERED_MIDDLE = "CM", "Centered 7-size column"
+    CENTERED_MIDDLE = "CM", "Centered 7/12-sized column"
 
 
 class ContentPage(Page):

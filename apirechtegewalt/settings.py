@@ -19,10 +19,12 @@ SECRET_KEY = os.getenv("SECRET_KEY", "override me")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True if os.getenv("NODEBUG") is None else False
 
+
 # TODO: Change your domain names here.
-ALLOWED_HOSTS = (
-    ["*"] if os.getenv("NODEBUG") is None else [".api.tatortrechts.de", "172.16.0.0/12"]
-)
+ALLOWED_HOSTS = ["*"] if os.getenv("NODEBUG") is None else [".api.tatortrechts.de"]
+
+# https://stackoverflow.com/a/45288019/4028896
+ALLOWED_HOSTS += ["172.17.{}.{}".format(i, j) for i in range(256) for j in range(256)]
 
 # TODO: Change the default "from" email here.
 DEFAULT_FROM_EMAIL = "me@mydomain.com"

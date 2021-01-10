@@ -1,11 +1,11 @@
 # `api.tatortrechts.de`
 
-Based on [django-startproject-docker-dokku](https://github.com/jfilter/django-startproject-docker-dokku).
+Backend for [tatortrechts.de]().
 
 ## Development
 
 ```bash
-git cone xx && cd xx && touch .env
+./locale [--build]
 ```
 
 migrate database:
@@ -35,10 +35,13 @@ docker-compose run --rm manage  ./manage.py shell_plus --print-sql
 ## Deployment
 
 The alpine version of postgis does not work together with Dokku.
+So tag this very specific postgres image:
 
 ```bash
 sudo dokku postgres:create apidb -i "postgis/postgis" -I "11-3.0"
 ```
+
+### Usefull commands:
 
 ```bash
 sudo dokku run api ./manage.py reset_db
@@ -56,6 +59,13 @@ sudo dokku run api ./manage.py importdata /importdata/rechtegewalt.db
 sudo dokku run api ./manage.py syncautocomplete
 ```
 
+### Environment Varibales
+
+-   `SENTRY_DNS`
+-   `NODEBUG=True`
+-   `SECRET_KEY`
+-   `WEB_CONCURRENCY=4`
+
 ## CMS
 
 We are using [WagTail](https://wagtail.io/) as a headless CMS.
@@ -63,7 +73,9 @@ You need to create pages with the following sluges to make the frontend work:
 
 -   `home`
 -   `hintergrund`
+-   `kontakt`
+-   `blog`
 
 ## License
 
-GPLv3
+AGPLv3

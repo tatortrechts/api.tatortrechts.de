@@ -1,1 +1,1 @@
-web: gunicorn apirechtegewalt.wsgi:application --workers=2
+web: gunicorn apirechtegewalt.wsgi:application

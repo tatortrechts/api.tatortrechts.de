@@ -1,7 +1,5 @@
-import string
 from collections import Counter
 
-from django.contrib.gis.db import models
 from django.utils.text import smart_split
 from tqdm import tqdm
 

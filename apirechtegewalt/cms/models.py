@@ -35,11 +35,28 @@ class QuoteBlock(blocks.StructBlock):
     author = blocks.TextBlock(required=False)
 
 
+# single colum can't be nested
+class ColumnSingleBlock(blocks.StreamBlock):
+    heading = blocks.CharBlock(classname="full title")
+    paragraph = blocks.RichTextBlock()
+    image = ImageChooserBlock()
+    quote = QuoteBlock()
+
+
+class CenteredColumnBlock(blocks.StructBlock):
+    column = ColumnSingleBlock(icon="wagtail", label="Centered column content")
+    column_size = blocks.IntegerBlock(
+        min_value=1, max_value=12, default=6, label="set the size of the column (1-12)"
+    )
+
+
+# also make it possible to use a centered column in a double column
 class ColumnBlock(blocks.StreamBlock):
     heading = blocks.CharBlock(classname="full title")
     paragraph = blocks.RichTextBlock()
     image = ImageChooserBlock()
     quote = QuoteBlock()
+    centered_column = CenteredColumnBlock()
 
     class Meta:
         template = "cms/column.html"
@@ -76,6 +93,7 @@ class ContentPage(Page):
             ("quote", QuoteBlock()),
             ("image", ImageChooserBlock()),
             ("two_columns", TwoColumnBlock()),
+            ("centered_column", CenteredColumnBlock()),
         ]
     )
 

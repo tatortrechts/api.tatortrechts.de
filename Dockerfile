@@ -7,15 +7,14 @@ RUN apt-get update && apt-get upgrade -y
 RUN apt-get install -y binutils libproj-dev gdal-bin libgdal-dev
 
 RUN pip install -U --pre pip poetry
-ADD poetry.lock /code/
-ADD pyproject.toml /code/
+ADD poetry.lock /app/
+ADD pyproject.toml /app/
 RUN poetry config virtualenvs.create false
-WORKDIR /code
+WORKDIR /app
 
 RUN /bin/bash -c '[[ -z "${IN_DOCKER}" ]] && poetry install --no-interaction --no-root || poetry install --no-dev --no-interaction --no-root'
 
-ADD dokku/CHECKS /app/
-ADD dokku/* /code/
+ADD dokku/ /app/
 
-COPY . /code/
-RUN /code/manage.py collectstatic --noinput
+COPY . /app/
+RUN /app/manage.py collectstatic --noinput

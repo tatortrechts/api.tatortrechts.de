@@ -16,7 +16,7 @@ services:
         image: web
         build: .
         volumes:
-            - .:/code:cached
+            - .:/app:cached
             - ./misc/importdata:/importdata
 
         ports:
@@ -33,7 +33,7 @@ services:
         build: .
         command: bash -c "./manage.py makemigrations && ./manage.py migrate --noinput"
         volumes:
-            - .:/code
+            - .:/app
             - ./misc/importdata:/importdata
         depends_on:
             - db

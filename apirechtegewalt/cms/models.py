@@ -1,10 +1,12 @@
 from django.db import models
-from wagtail.admin.edit_handlers import FieldPanel, StreamFieldPanel
+from wagtail.admin.edit_handlers import FieldPanel, StreamFieldPanel, MultiFieldPanel
 from wagtail.core import blocks
 from wagtail.core.fields import StreamField
 from wagtail.core.models import Page
 from wagtail.images.blocks import ImageChooserBlock
 from wagtail.api import APIField
+from wagtail.images.api.fields import ImageRenditionField
+from wagtail.images.edit_handlers import ImageChooserPanel
 
 from wagtail.images.models import Image, AbstractImage, AbstractRendition
 
@@ -41,6 +43,7 @@ class ColumnSingleBlock(blocks.StreamBlock):
     paragraph = blocks.RichTextBlock()
     image = ImageChooserBlock()
     quote = QuoteBlock()
+    raw_html = blocks.RawHTMLBlock()
 
 
 class CenteredColumnBlock(blocks.StructBlock):
@@ -56,6 +59,7 @@ class ColumnBlock(blocks.StreamBlock):
     paragraph = blocks.RichTextBlock()
     image = ImageChooserBlock()
     quote = QuoteBlock()
+    raw_html = blocks.RawHTMLBlock()
     centered_column = CenteredColumnBlock()
 
     class Meta:
@@ -79,7 +83,18 @@ class PageLayout(models.TextChoices):
 
 
 class ContentPage(Page):
-    date = models.DateField("Post date", null=True, blank=True)
+    article_date = models.DateField(
+        "Article date (only for blog)", null=True, blank=True
+    )
+
+    article_image = models.ForeignKey(
+        "cms.CustomImage",
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name="+",
+    )
+
     layout = models.CharField(
         max_length=2,
         choices=PageLayout.choices,
@@ -94,18 +109,32 @@ class ContentPage(Page):
             ("image", ImageChooserBlock()),
             ("two_columns", TwoColumnBlock()),
             ("centered_column", CenteredColumnBlock()),
+            ("raw_html", blocks.RawHTMLBlock()),
+            ("list_child_pages", blocks.PageChooserBlock(can_choose_root=False)),
         ]
     )
 
     content_panels = Page.content_panels + [
         StreamFieldPanel("body"),
-        FieldPanel("date"),
+        FieldPanel("article_date"),
         FieldPanel("layout"),
+    ]
+
+    promote_panels = [
+        MultiFieldPanel(Page.promote_panels, "Common page configuration"),
+        ImageChooserPanel(
+            "article_image",
+        ),
     ]
 
     # Export fields over the API
     api_fields = [
         APIField("body"),
-        APIField("date"),
+        APIField("article_date"),
+        APIField("article_image"),
         APIField("layout"),
+        APIField(
+            "article_image_thumbnail",
+            serializer=ImageRenditionField("fill-600x200", source="article_image"),
+        ),
     ]

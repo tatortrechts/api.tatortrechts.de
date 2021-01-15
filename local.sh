@@ -1,3 +1,6 @@
 #!/usr/bin/env bash
 
-docker-compose up $1
+# To run form scratch:
+# ./local.sh --build --no-cache
+
+docker-compose up --remove-orphans "$@"

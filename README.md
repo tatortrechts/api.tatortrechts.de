@@ -5,31 +5,31 @@ Backend for [tatortrechts.de]().
 ## Development
 
 ```bash
-./locale [--build]
+./local.sh [--build] [--no-cache]
 ```
 
 migrate database:
 
 ```bash
-docker-compose run --rm manage
+./local_manage.sh
 ```
 
 import data:
 
 ```bash
-docker-compose run --rm manage ./manage.py importdata /importdata/rechtegewalt.db
+./local_manage.sh importdata /importdata/rechtegewalt.db
 ```
 
 reset database and it's content:
 
 ```bash
-docker-compose run --rm manage  ./manage.py reset_db
+./local_manage.sh reset_db
 ```
 
 access django shell for debugging:
 
 ```bash
-docker-compose run --rm manage  ./manage.py shell_plus --print-sql
+./local_manage.sh shell_plus --print-sql
 ```
 
 ## Deployment
@@ -38,6 +38,7 @@ The alpine version of postgis does not work together with Dokku.
 So tag this very specific postgres image:
 
 ```bash
+docker pull postgis/postgis:11-3.0
 sudo dokku postgres:create apidb -i "postgis/postgis" -I "11-3.0"
 ```
 
@@ -78,4 +79,4 @@ You need to create pages with the following sluges to make the frontend work:
 
 ## License
 
-AGPLv3
+Affero General Public License 3.0

@@ -42,6 +42,8 @@ class ContentPagesAPIViewSet(BaseAPIViewSet):
         self.listing_default_fields += [
             "article_image",
             "article_image_thumbnail",
+            "article_teaser",
+            "article_date",
             "title",
             "slug",
             "first_published_at",

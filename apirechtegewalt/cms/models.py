@@ -95,6 +95,10 @@ class ContentPage(Page):
         related_name="+",
     )
 
+    article_teaser = models.TextField(
+        "Article teaser (only for blog)", null=True, blank=True
+    )
+
     layout = models.CharField(
         max_length=2,
         choices=PageLayout.choices,
@@ -117,6 +121,7 @@ class ContentPage(Page):
     content_panels = Page.content_panels + [
         StreamFieldPanel("body"),
         FieldPanel("article_date"),
+        FieldPanel("article_teaser"),
         FieldPanel("layout"),
     ]
 
@@ -131,10 +136,11 @@ class ContentPage(Page):
     api_fields = [
         APIField("body"),
         APIField("article_date"),
+        APIField("article_teaser"),
         APIField("article_image"),
         APIField("layout"),
         APIField(
             "article_image_thumbnail",
-            serializer=ImageRenditionField("fill-600x200", source="article_image"),
+            serializer=ImageRenditionField("fill-800x400", source="article_image"),
         ),
     ]

@@ -23,9 +23,20 @@ class Command(BaseCommand):
 
     def add_arguments(self, parser):
         parser.add_argument("db_path", type=str)
+        parser.add_argument(
+            "--delete",
+            action="store_true",
+        )
 
     def handle(self, db_path, *args, **options):
         db = dataset.connect("sqlite:///" + db_path)
+
+        if options["delete"]:
+            self.stdout.write("Deleting old data...")
+
+            models = [Chronicle, Location, Incident, Source]
+            for m in models:
+                m.objects.all().delete()
 
         for c in tqdm(db["chronicles"].all(), desc="updating chronicles"):
             obj, created = Chronicle.objects.update_or_create(

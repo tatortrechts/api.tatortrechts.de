@@ -147,6 +147,6 @@ class ContentPage(Page):
         APIField("layout"),
         APIField(
             "article_image_thumbnail",
-            serializer=ImageRenditionField("fill-800x400", source="article_image"),
+            serializer=ImageRenditionField("fill-1200x600", source="article_image"),
         ),
     ]

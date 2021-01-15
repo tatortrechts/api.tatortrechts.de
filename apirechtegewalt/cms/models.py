@@ -95,6 +95,10 @@ class ContentPage(Page):
         related_name="+",
     )
 
+    article_image_caption = models.TextField(
+        "Article image caption (only for blog)", null=True, blank=True
+    )
+
     article_teaser = models.TextField(
         "Article teaser (only for blog)", null=True, blank=True
     )
@@ -122,6 +126,7 @@ class ContentPage(Page):
         StreamFieldPanel("body"),
         FieldPanel("article_date"),
         FieldPanel("article_teaser"),
+        FieldPanel("article_image_caption"),
         FieldPanel("layout"),
     ]
 
@@ -138,6 +143,7 @@ class ContentPage(Page):
         APIField("article_date"),
         APIField("article_teaser"),
         APIField("article_image"),
+        APIField("article_image_caption"),
         APIField("layout"),
         APIField(
             "article_image_thumbnail",

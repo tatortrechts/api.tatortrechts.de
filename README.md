@@ -42,6 +42,15 @@ docker pull postgis/postgis:11-3.0
 sudo dokku postgres:create apidb -i "postgis/postgis" -I "11-3.0"
 ```
 
+Mount these volumes:
+
+To 1) import data and 2) persist image uploads
+
+```
+/wahatever/data/:/importdata
+/whatever/media:/app/media
+```
+
 ### Usefull commands:
 
 ```bash

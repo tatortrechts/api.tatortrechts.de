@@ -174,6 +174,11 @@ class AggregatedIncidentsViewSet(viewsets.ReadOnlyModelViewSet):
             total=Count("incident", filter=Q(incident__in=queryset_ids))
         ).filter(total__gt=0)
 
+    # cache for 10 minutes
+    @method_decorator(cache_page(60 * 10))
+    def dispatch(self, request, *args, **kwargs):
+        return super().dispatch(request, *args, **kwargs)
+
 
 class AutocompleteViewSet(viewsets.ReadOnlyModelViewSet):
     """Do prefix search on incidents because its about prefix. ;)
@@ -197,6 +202,11 @@ class AutocompleteViewSet(viewsets.ReadOnlyModelViewSet):
         )
         # order the 10 best matching for lenght of sentence
         return sorted(suggestions[:10], key=lambda x: len(x.option))
+
+    # cache for 10 minutes
+    @method_decorator(cache_page(60 * 10))
+    def dispatch(self, request, *args, **kwargs):
+        return super().dispatch(request, *args, **kwargs)
 
 
 class ChroniclesViewSet(viewsets.ReadOnlyModelViewSet):
@@ -225,6 +235,11 @@ class LocationViewSet(viewsets.ReadOnlyModelViewSet):
             .annotate(total=Count("id"))
             .order_by("-total")
         )[:10]
+
+    # cache for 10 minutes
+    @method_decorator(cache_page(60 * 10))
+    def dispatch(self, request, *args, **kwargs):
+        return super().dispatch(request, *args, **kwargs)
 
 
 class MinMaxDateViewSet(viewsets.ViewSet):

@@ -79,6 +79,10 @@ class IncidentSearchQuerySet(SearchQuerySet):
         self.update(
             search_vector=SearchVector("title", weight="A", config="german")
             + SearchVector("description", weight="B", config="german")
+            + SearchVector("tags", weight="C", config="german")
+            + SearchVector("factums", weight="C", config="german")
+            + SearchVector("motives", weight="C", config="german")
+            + SearchVector("contexts", weight="C", config="german")
         )
 
 

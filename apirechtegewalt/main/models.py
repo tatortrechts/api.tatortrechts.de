@@ -62,11 +62,16 @@ class Incident(models.Model):
     date = models.DateField()
     orig_city = models.CharField(max_length=255, null=True)
     orig_county = models.CharField(max_length=255, null=True)
+    orig_address = models.CharField(max_length=255, null=True)
 
     location = models.ForeignKey("Location", on_delete=models.SET_NULL, null=True)
     chronicle = models.ForeignKey("Chronicle", on_delete=models.SET_NULL, null=True)
     search_vector = SearchVectorField(null=True)
     phrases = models.ManyToManyField("Phrase")
+    contexts = models.TextField(null=True, blank=True)
+    factums = models.TextField(null=True, blank=True)
+    motives = models.TextField(null=True, blank=True)
+    tags = models.TextField(null=True, blank=True)
 
     objects = IncidentSearchQuerySet.as_manager()
 
@@ -77,9 +82,9 @@ class Incident(models.Model):
 class Source(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    rg_id = models.CharField(max_length=255, unique=True)
+    rg_id = models.CharField(max_length=255)
     name = models.CharField(max_length=255)
-    url = models.CharField(max_length=255, blank=True, default="")
+    url = models.TextField(null=True, blank=True)
     date = models.DateField(blank=True, null=True)
     incident = models.ForeignKey("Incident", on_delete=models.CASCADE, default=None)
 

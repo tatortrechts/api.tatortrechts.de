@@ -97,6 +97,7 @@ class Command(BaseCommand):
                 "longitude",
                 "point_geom",
                 "chronicler_name",
+                "address",
             ] + location_fields:
                 del incident[x]
 

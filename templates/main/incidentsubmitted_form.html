@@ -2,7 +2,7 @@
 <html lang="de">
     <head>
         <meta charset="UTF-8" />
-        <title>{% block title %}{% endblock %} - {{ request.site.name }}</title>
+        <title>Neue Tat hinzufügen</title>
 
         <link href="{% static "css/main.css" %}" rel="stylesheet">
         <link
@@ -20,15 +20,16 @@
             </div>
             {% endfor %} {% endif %}
 
-            <h1>Neue Tag hinzufügen</h1>
+            <h1>Neue Tat hinzufügen</h1>
             <p>Bitte hier besseren Text</p>
             {% load crispy_forms_tags %}
             <form method="post" style="margin-bottom: 500px">
                 {% csrf_token %} {{ form|crispy }}
 
-                <button type="submit" class="btn btn-secondary">Submit</button>
+                <button type="submit" class="btn btn-secondary">
+                    Hinzufügen
+                </button>
             </form>
-            <!-- Content here -->
         </div>
     </body>
 </html>

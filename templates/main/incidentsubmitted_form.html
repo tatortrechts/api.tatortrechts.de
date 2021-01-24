@@ -1,0 +1,34 @@
+{% load static %}<!DOCTYPE html>
+<html lang="de">
+    <head>
+        <meta charset="UTF-8" />
+        <title>{% block title %}{% endblock %} - {{ request.site.name }}</title>
+
+        <link href="{% static "css/main.css" %}" rel="stylesheet">
+        <link
+            rel="stylesheet"
+            href="/static/bootstrap-4.6.0-dist/css/bootstrap.min.css"
+        />
+    </head>
+    <body>
+        <div class="container">
+            {% if messages %} {% for message in messages %}
+            <div
+                class="alert {% if message.tags %}alert-{{ message.tags }}{% endif %}"
+            >
+                {{ message }}
+            </div>
+            {% endfor %} {% endif %}
+
+            <h1>Neue Tag hinzufügen</h1>
+            <p>Bitte hier besseren Text</p>
+            {% load crispy_forms_tags %}
+            <form method="post" style="margin-bottom: 500px">
+                {% csrf_token %} {{ form|crispy }}
+
+                <button type="submit" class="btn btn-secondary">Submit</button>
+            </form>
+            <!-- Content here -->
+        </div>
+    </body>
+</html>

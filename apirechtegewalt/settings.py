@@ -62,6 +62,7 @@ INSTALLED_APPS = [
     "rest_framework",
     "rest_framework_gis",
     "wagtail.api.v2",
+    "crispy_forms",
     "apirechtegewalt.main",
     "apirechtegewalt.cms",
 ]
@@ -99,6 +100,8 @@ TEMPLATES = [
         },
     }
 ]
+
+CRISPY_TEMPLATE_PACK = "bootstrap4"
 
 TEMPLATE_STRING_IF_INVALID = "VARIABLE UNDEFINED: %s"
 

@@ -17,7 +17,7 @@ from rest_framework import viewsets
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.response import Response
 
-from .models import Chronicle, Incident, Location, Phrase
+from .models import Chronicle, Incident, IncidentSubmitted, Location, Phrase
 from .serializers import (
     AggregatedIncidentsSerializer,
     AutocompleteSerializer,
@@ -248,3 +248,41 @@ class MinMaxDateViewSet(viewsets.ViewSet):
         max_date = Incident.objects.latest("date").date
         total = Incident.objects.count()
         return Response({"min_date": min_date, "max_date": max_date, "total": total})
+
+
+# non-api views
+
+from django.views.generic.edit import CreateView
+from django.forms import DateInput
+from django.utils.crypto import get_random_string
+from django.contrib.messages.views import SuccessMessageMixin
+
+
+class IncidentSubmittedCreate(SuccessMessageMixin, CreateView):
+    model = IncidentSubmitted
+
+    fields = [
+        "title",
+        "description",
+        "date",
+        "sources_input",
+        "location_input",
+        "contexts",
+        "motives",
+        "factums",
+        "tags",
+    ]
+
+    success_url = "/neu/"
+    success_message = "Danke für den Eintrag. Wir prüfen ihn und stellen ihn danach online. Du kannst untere weitere hinzufügen."
+
+    def get_form(self, form_class=None):
+        form = super().get_form(form_class)
+        form.fields["date"].widget = DateInput(
+            attrs={"class": "form-control", "type": "date"}
+        )
+        return form
+
+    def form_valid(self, form):
+        form.instance.rg_id = "tatortrechts-" + get_random_string(length=50)
+        return super().form_valid(form)

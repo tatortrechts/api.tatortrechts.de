@@ -98,3 +98,11 @@ class Phrase(models.Model):
 
     class Meta(object):
         indexes = [GinIndex(fields=["search_vector"])]
+
+
+class IncidentSubmitted(Incident):
+    location_input = models.TextField()
+    sources_input = models.TextField()
+
+    class Meta:
+        db_table = "incident_submitted"

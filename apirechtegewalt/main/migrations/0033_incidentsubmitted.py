@@ -7,20 +7,30 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('main', '0032_auto_20210123_2320'),
+        ("main", "0032_auto_20210123_2320"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='IncidentSubmitted',
+            name="IncidentSubmitted",
             fields=[
-                ('incident_ptr', models.OneToOneField(auto_created=True, on_delete=django.db.models.deletion.CASCADE, parent_link=True, primary_key=True, serialize=False, to='main.incident')),
-                ('location_input', models.TextField()),
-                ('sources_input', models.TextField()),
+                (
+                    "incident_ptr",
+                    models.OneToOneField(
+                        auto_created=True,
+                        on_delete=django.db.models.deletion.CASCADE,
+                        parent_link=True,
+                        primary_key=True,
+                        serialize=False,
+                        to="main.incident",
+                    ),
+                ),
+                ("location_input", models.TextField()),
+                ("sources_input", models.TextField()),
             ],
             options={
-                'db_table': 'incident_submitted',
+                "db_table": "incident_submitted",
             },
-            bases=('main.incident',),
+            bases=("main.incident",),
         ),
     ]

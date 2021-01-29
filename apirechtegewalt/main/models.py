@@ -100,9 +100,23 @@ class Phrase(models.Model):
         indexes = [GinIndex(fields=["search_vector"])]
 
 
-class IncidentSubmitted(Incident):
+# No inheritance to not fuck up the logic (filter et.c) of Incident
+class IncidentSubmitted(models.Model):
     location_input = models.TextField()
     sources_input = models.TextField()
 
-    class Meta:
-        db_table = "incident_submitted"
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    rg_id = models.CharField(max_length=255, unique=True)
+    title = models.CharField(max_length=1000, blank=True, default="", null=True)
+    description = models.TextField()
+    date = models.DateField()
+
+    contexts = models.TextField(null=True, blank=True)
+    factums = models.TextField(null=True, blank=True)
+    motives = models.TextField(null=True, blank=True)
+    tags = models.TextField(null=True, blank=True)
+
+    # class Meta:
+    #     db_table = "incident_submitted"

@@ -34,13 +34,14 @@ class IncidentFilter(filters.FilterSet):
     chronicle = filters.ModelMultipleChoiceFilter(queryset=Chronicle.objects.all())
     q = filters.CharFilter(method="search_fulltext")
     location = filters.CharFilter(field_name="location__id")
+    rg_id = filters.CharFilter(field_name="rg_id")
 
     def search_fulltext(self, queryset, field_name, value):
         return queryset.search(value)
 
     class Meta:
         model = Incident
-        fields = ["location", "start_date", "end_date"]
+        fields = ["location", "start_date", "end_date", "rg_id"]
 
 
 class AutocompleteIncidentFilter(IncidentFilter):

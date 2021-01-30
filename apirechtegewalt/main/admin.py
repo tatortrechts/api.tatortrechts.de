@@ -18,4 +18,4 @@ class ErrorReportAdmin(admin.ModelAdmin):
 
 @admin.register(Incident)
 class IncidentAdmin(admin.ModelAdmin):
-    pass
+    exclude = ("search_vector", "phrases")

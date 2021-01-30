@@ -120,3 +120,8 @@ class IncidentSubmitted(models.Model):
 
     # class Meta:
     #     db_table = "incident_submitted"
+
+
+class ErrorReport(models.Model):
+    rg_id = models.TextField()
+    description = models.TextField()

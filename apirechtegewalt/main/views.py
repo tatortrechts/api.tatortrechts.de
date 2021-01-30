@@ -17,7 +17,14 @@ from rest_framework import viewsets
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.response import Response
 
-from .models import Chronicle, Incident, IncidentSubmitted, Location, Phrase
+from .models import (
+    Chronicle,
+    ErrorReport,
+    Incident,
+    IncidentSubmitted,
+    Location,
+    Phrase,
+)
 from .serializers import (
     AggregatedIncidentsSerializer,
     AutocompleteSerializer,
@@ -286,4 +293,28 @@ class IncidentSubmittedCreate(SuccessMessageMixin, CreateView):
 
     def form_valid(self, form):
         form.instance.rg_id = "tatortrechts-" + get_random_string(length=50)
+        return super().form_valid(form)
+
+
+from base64 import b64decode
+
+
+class ErrorReportCase(SuccessMessageMixin, CreateView):
+    model = ErrorReport
+
+    fields = [
+        "description",
+    ]
+
+    success_url = "/fehler/"
+    success_message = "Danke für deine Meldung. Wir werden sie zeitnah bearbeiten."
+
+    def form_valid(self, form):
+        if "rg_id" in self.request.GET:
+            rg_id = self.request.GET["rg_id"]
+            rg_id = b64decode(rg_id).decode("utf-8", "ignore")
+        else:
+            rg_id = "keine Angabe"
+
+        form.instance.rg_id = rg_id
         return super().form_valid(form)

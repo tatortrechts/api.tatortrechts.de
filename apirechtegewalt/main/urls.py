@@ -3,6 +3,7 @@
 from django.urls import include, path
 from rest_framework import routers
 
+
 from . import views
 
 router = routers.DefaultRouter()
@@ -19,13 +20,19 @@ router.register(
     basename="histogram_incidents",
 )
 router.register(
-    r"chronicles", views.ChroniclesViewSet, basename="chronicles",
+    r"chronicles",
+    views.ChroniclesViewSet,
+    basename="chronicles",
 )
 router.register(
-    r"locations", views.LocationViewSet, basename="locations",
+    r"locations",
+    views.LocationViewSet,
+    basename="locations",
 )
-router.register(r'min_max_date', views.MinMaxDateViewSet, basename='min_max_date')
+router.register(r"min_max_date", views.MinMaxDateViewSet, basename="min_max_date")
 
 urlpatterns = [
+    path("neu/", views.IncidentSubmittedCreate.as_view()),
+    path("fehler/", views.ErrorReportCase.as_view()),
     path("", include(router.urls)),
 ]

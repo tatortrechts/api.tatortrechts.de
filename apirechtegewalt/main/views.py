@@ -250,6 +250,7 @@ class LocationViewSet(viewsets.ReadOnlyModelViewSet):
         return super().dispatch(request, *args, **kwargs)
 
 
+# TODO: rename? not making sense with `total`
 class MinMaxDateViewSet(viewsets.ViewSet):
     def list(self, response):
         min_date = Incident.objects.earliest("date").date
@@ -258,6 +259,18 @@ class MinMaxDateViewSet(viewsets.ViewSet):
         return Response({"min_date": min_date, "max_date": max_date, "total": total})
 
 
+class ChroniclesHistogramViewSet(viewsets.ViewSet):
+    def list(self, response):
+        queryset = (
+            Incident.objects.annotate(year=TruncYear("date"))
+            .values("chronicle", "year")
+            .order_by()
+            .annotate(total=Count("year"))
+        )
+        return Response({"result": queryset})
+
+
+# FIXME
 # non-api views
 
 from django.views.generic.edit import CreateView

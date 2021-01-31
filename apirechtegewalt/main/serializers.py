@@ -7,7 +7,7 @@ from .models import Chronicle, Incident, Location, Source
 class ChroniclesSerializer(serializers.ModelSerializer):
     class Meta:
         model = Chronicle
-        fields = ["id", "name", "region"]
+        fields = "__all__"
 
 
 class LocationSerializer(serializers.ModelSerializer):

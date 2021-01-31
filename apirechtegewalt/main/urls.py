@@ -7,7 +7,7 @@ from rest_framework import routers
 from . import views
 
 router = routers.DefaultRouter()
-router.register(r"incidents", views.IncidentsViewSet, basename="incident")
+router.register(r"incidents", views.IncidentsViewSet, basename="incidents")
 router.register(
     r"aggregated_incidents",
     views.AggregatedIncidentsViewSet,
@@ -30,6 +30,11 @@ router.register(
     basename="locations",
 )
 router.register(r"min_max_date", views.MinMaxDateViewSet, basename="min_max_date")
+router.register(
+    r"chronicles_histogram",
+    views.ChroniclesHistogramViewSet,
+    basename="chronicles_histogram",
+)
 
 urlpatterns = [
     path("neu/", views.IncidentSubmittedCreate.as_view()),

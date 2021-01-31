@@ -37,5 +37,6 @@ services:
             - ./misc/importdata:/importdata
         depends_on:
             - db
+            - redis
         environment:
             IN_DOCKER: 1

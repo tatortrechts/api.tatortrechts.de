@@ -29,12 +29,17 @@ def split_proximity(text):
 
 
 class SearchQuerySet(models.QuerySet):
-    def search(self, search_text, rank=True, prefix=True, highlight=False):
+    def search(
+        self, search_text, rank=True, prefix=True, highlight=False, force_or=False
+    ):
         if search_text is None:
             return self
 
         if prefix:
-            conj = " & " if not " or " in search_text.lower() else " | "
+            if force_or:
+                conj = " | "
+            else:
+                conj = " & " if not " or " in search_text.lower() else " | "
             search_text = conj.join(split_proximity(search_text))
             search_query = SearchQuery(search_text, config="german", search_type="raw")
 
@@ -92,5 +97,15 @@ class PhrasesQuerySet(SearchQuerySet):
 
 
 class LocationSearchQuerySet(SearchQuerySet):
+    def search(self, search_text):
+        return super().search(
+            search_text,
+            force_or=True,
+        )
+
     def sync(self):
-        self.update(search_vector=SearchVector("location_string", config="german"))
+        self.update(
+            search_vector=SearchVector("city", weight="A", config="german")
+            + SearchVector("county", weight="B", config="german")
+            + SearchVector("district", weight="B", config="german")
+        )

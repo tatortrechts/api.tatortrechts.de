@@ -237,12 +237,43 @@ class LocationViewSet(viewsets.ReadOnlyModelViewSet):
         if search_term is not None:
             rs_qs = rs_qs.search(search_term)
 
+        # r1 = (
+        #     rs_qs.filter(incident__in=queryset)
+        #     .values("city", "county", "district")
+        #     .order_by()
+        #     .annotate(total=Count("*"))
+        # )
+
+        # # r2 = (
+        # #     rs_qs.filter(incident__in=queryset)
+        # #     .values("city", "county", "district")
+        # #     .order_by("city", "county")
+        # #     .annotate(total=Count("*"))
+        # # )
+
+        # # r3 = (
+        # #     rs_qs.filter(incident__in=queryset)
+        # #     .values("city", "county", "district")
+        # #     .order_by("county")
+        # #     .annotate(total=Count("county"))
+        # # )
+
+        # # return r1.union(r2, r3).order_by("-total")[:10]
+        # return r1.order_by("-total")[:10]
+        # queryset is based on Incident, but we need Location
+        # return (
+        #     rs_qs.filter(incident__in=queryset)
+        #     .values("city", "county", "district")
+        #     .order_by()
+        #     .annotate(total=Count("*"))
+        #     .order_by("-total")
+        # )[:10]
         # queryset is based on Incident, but we need Location
         return (
             rs_qs.filter(incident__in=queryset)
             .annotate(total=Count("id"))
             .order_by("-total")
-        )[:10]
+        ).values("city", "county", "district", "geolocation")[:10]
 
     # cache for 10 minutes
     @method_decorator(cache_page(60 * 10))

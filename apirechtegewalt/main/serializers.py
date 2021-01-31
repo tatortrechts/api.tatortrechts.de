@@ -37,6 +37,7 @@ class LocationStringSerializer(serializers.ModelSerializer):
             "district",
             "city",
             "county",
+            "geolocation",
         ]
 
 

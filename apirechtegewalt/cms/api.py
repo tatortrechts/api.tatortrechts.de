@@ -1,5 +1,5 @@
 from wagtail.api.v2.router import WagtailAPIRouter
-from wagtail.api.v2.views import BaseAPIViewSet, ChildOfFilter, FieldsFilter
+from wagtail.api.v2.views import BaseAPIViewSet, ChildOfFilter, FieldsFilter, OrderingFilter
 from wagtail.images.api.v2.views import ImagesAPIViewSet
 
 from .models import ContentPage
@@ -16,6 +16,7 @@ class ContentPagesAPIViewSet(BaseAPIViewSet):
         self.filter_backends = [
             ChildOfFilter,
             FieldsFilter,
+            OrderingFilter
         ]
         self.known_query_parameters = self.known_query_parameters.union(
             [
@@ -24,6 +25,7 @@ class ContentPagesAPIViewSet(BaseAPIViewSet):
                 "descendant_of",
                 "translation_of",
                 "locale",
+                "live"
             ],
         )
 
@@ -37,6 +39,7 @@ class ContentPagesAPIViewSet(BaseAPIViewSet):
             "seo_title",
             "search_description",
             "first_published_at",
+            "live"
         ]
 
         self.listing_default_fields += [
@@ -47,6 +50,7 @@ class ContentPagesAPIViewSet(BaseAPIViewSet):
             "title",
             "slug",
             "first_published_at",
+            "live"
         ]
 
         self.nested_default_fields += [
@@ -55,7 +59,7 @@ class ContentPagesAPIViewSet(BaseAPIViewSet):
 
     # https://github.com/wagtail/wagtail/blob/971bdc0799a800a373e7326d9e564813934c09c6/wagtail/api/v2/views.py
     def get_base_queryset(self):
-        queryset = ContentPage.objects.all().public().live()
+        queryset = ContentPage.objects.all().public().live().order_by('-article_date')
         return queryset
 
 

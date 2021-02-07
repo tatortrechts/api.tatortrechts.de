@@ -4,7 +4,7 @@ ENV PYTHONUNBUFFERED 1
 RUN apt-get update && apt-get upgrade -y
 
 # for geodjango
-RUN apt-get install -y binutils libproj-dev gdal-bin libgdal-dev
+RUN apt-get install -y binutils libproj-dev gdal-bin libgdal-dev postgresql-client
 
 RUN pip install -U --pre pip poetry
 ADD poetry.lock /app/

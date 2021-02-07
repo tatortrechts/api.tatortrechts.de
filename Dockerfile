@@ -6,8 +6,7 @@ RUN apt-get update && apt-get upgrade -y
 # for geodjango
 RUN apt-get install -y binutils libproj-dev gdal-bin libgdal-dev postgresql-client
 
-RUN pip install --upgrade pip setuptools wheel
-RUN pip install -U --pre pip poetry
+RUN pip install --upgrade pip setuptools wheel poetry
 ADD poetry.lock /app/
 ADD pyproject.toml /app/
 RUN poetry config virtualenvs.create false

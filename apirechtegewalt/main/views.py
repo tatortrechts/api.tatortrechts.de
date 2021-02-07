@@ -322,8 +322,10 @@ class IncidentSubmittedCreate(SuccessMessageMixin, CreateView):
         "email",
     ]
 
-    success_url = "/neu/"
-    success_message = "Danke für den Eintrag. Wir prüfen ihn und stellen ihn danach online. Du kannst untere weitere hinzufügen."
+    success_url = "/neuerfall/"
+    success_message = (
+        "Danke für deine Meldung. Wir prüfen sie und stellen die Tat danach online."
+    )
 
     def get_form(self, form_class=None):
         form = super().get_form(form_class)
@@ -343,19 +345,16 @@ from base64 import b64decode
 class ErrorReportCase(SuccessMessageMixin, CreateView):
     model = ErrorReport
 
-    fields = [
-        "description",
-    ]
+    fields = ["description", "email"]
 
     success_url = "/fehler/"
     success_message = "Danke für deine Meldung. Wir werden sie zeitnah bearbeiten."
 
     def form_valid(self, form):
-        if "rg_id" in self.request.GET:
-            rg_id = self.request.GET["rg_id"]
-            rg_id = b64decode(rg_id).decode("utf-8", "ignore")
+        if "incident_id" in self.request.GET:
+            incident_id = int(self.request.GET["incident_id"])
         else:
-            rg_id = "keine Angabe"
+            incident_id = None
 
-        form.instance.rg_id = rg_id
+        form.instance.incident_id = incident_id
         return super().form_valid(form)

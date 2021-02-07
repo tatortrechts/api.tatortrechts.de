@@ -141,5 +141,13 @@ class IncidentSubmitted(models.Model):
 
 
 class ErrorReport(models.Model):
-    rg_id = models.TextField()
-    description = models.TextField()
+    incident_id = models.IntegerField(null=True)
+    description = models.TextField(
+        "Beschreibung",
+    )
+    email = models.EmailField(
+        "Email",
+        help_text="Lass uns optional deine E-Mail Adresse da, damit wir mit dir bei Nachfragen in Kontakt treten können.",
+        null=True,
+        blank=True,
+    )

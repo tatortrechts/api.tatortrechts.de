@@ -37,7 +37,7 @@ router.register(
 )
 
 urlpatterns = [
-    path("neu/", views.IncidentSubmittedCreate.as_view()),
+    path("neuerfall/", views.IncidentSubmittedCreate.as_view()),
     path("fehler/", views.ErrorReportCase.as_view()),
     path("", include(router.urls)),
 ]

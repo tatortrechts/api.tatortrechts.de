@@ -314,15 +314,12 @@ class IncidentSubmittedCreate(SuccessMessageMixin, CreateView):
     model = IncidentSubmitted
 
     fields = [
+        "location_input",
+        "date",
         "title",
         "description",
-        "date",
         "sources_input",
-        "location_input",
-        "contexts",
-        "motives",
-        "factums",
-        "tags",
+        "email",
     ]
 
     success_url = "/neu/"

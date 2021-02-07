@@ -102,16 +102,34 @@ class Phrase(models.Model):
 
 # No inheritance to not fuck up the logic (filter et.c) of Incident
 class IncidentSubmitted(models.Model):
-    location_input = models.TextField()
-    sources_input = models.TextField()
+    location_input = models.CharField(
+        "Ort", help_text="Z. B. 'Dortmund, Dorstfeld'", max_length=1000
+    )
+    sources_input = models.TextField(
+        "Quellen",
+        help_text="Schick uns öffentliche Belege zu, für den von dir geschilderten Fall. Z. B. Links zu einem Zeitungsbericht.",
+    )
 
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
     rg_id = models.CharField(max_length=255, unique=True)
-    title = models.CharField(max_length=1000, blank=True, default="", null=True)
-    description = models.TextField()
-    date = models.DateField()
+    title = models.CharField(
+        "Titel",
+        help_text="Beschreib in ein paar Worten, was passiert ist. Z. B. 'Hakenkreuz an Schulwand gesprüht'",
+        max_length=1000,
+    )
+    description = models.TextField(
+        "Beschreibung",
+        help_text="Erzähl in ein paar Sätzen, worum es geht. Z. B. 'In der XY Schule ist eine unbekannte Person dabei beobachtet worden, wie sie ....'",
+    )
+    date = models.DateField("Datum")
+    email = models.EmailField(
+        "Email",
+        help_text="Lass uns optional deine E-Mail Adresse da, damit wir mit dir bei Nachfragen in Kontakt treten können.",
+        null=True,
+        blank=True,
+    )
 
     contexts = models.TextField(null=True, blank=True)
     factums = models.TextField(null=True, blank=True)

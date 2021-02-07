@@ -2,7 +2,7 @@
 <html lang="de">
     <head>
         <meta charset="UTF-8" />
-        <title>Neue Tat hinzufügen</title>
+        <title>Neuen Fall von rechter Gewalt registrieren</title>
 
         <link href="{% static "css/main.css" %}" rel="stylesheet">
         <link
@@ -20,8 +20,13 @@
             </div>
             {% endfor %} {% endif %}
 
-            <h1>Neue Tat hinzufügen</h1>
-            <p>Bitte hier besseren Text</p>
+            <h1>Neuen Fall von rechter Gewalt registrieren</h1>
+            <p>
+                Mach mit und unterstütze Tatort Rechts. Hier kannst du einen
+                neuen Fall von rechter Gewalt registrieren. Wir können nur Fälle
+                zur Karte hinzufügen, die über mindestens einen öffentlichen
+                Link von einer verlässlichen Quelle zitiert werden.
+            </p>
             {% load crispy_forms_tags %}
             <form method="post" style="margin-bottom: 500px">
                 {% csrf_token %} {{ form|crispy }}

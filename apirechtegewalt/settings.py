@@ -63,6 +63,7 @@ INSTALLED_APPS = [
     "rest_framework_gis",
     "wagtail.api.v2",
     "crispy_forms",
+    "dbbackup",  # django-dbbackup
     "apirechtegewalt.main",
     "apirechtegewalt.cms",
 ]
@@ -254,6 +255,10 @@ REST_FRAMEWORK = {
     "PAGE_SIZE": 100,
     "DEFAULT_FILTER_BACKENDS": ("django_filters.rest_framework.DjangoFilterBackend",),
 }
+
+
+DBBACKUP_STORAGE = 'django.core.files.storage.FileSystemStorage'
+DBBACKUP_STORAGE_OPTIONS = {'location': '/backups/'}
 
 
 try:

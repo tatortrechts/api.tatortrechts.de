@@ -46,6 +46,10 @@ class Location(models.Model):
     geolocation_geometry = models.PointField(default=Point(0.0, 0.0))
     search_vector = SearchVectorField(null=True)
 
+    # not actually used, only hotfix for importing data :/
+    latitude = models.FloatField(null=True)
+    longitude = models.FloatField(null=True)
+
     objects = LocationSearchQuerySet.as_manager()
 
     class Meta(object):

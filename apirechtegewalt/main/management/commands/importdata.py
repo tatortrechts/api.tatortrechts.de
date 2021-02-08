@@ -15,6 +15,8 @@ location_fields = [
     "county",
     "state",
     "country",
+    "latitude",
+    "longitude",
 ]
 
 
@@ -56,7 +58,10 @@ class Command(BaseCommand):
                 [x for k, x in real_loc.items() if x is not None]
             )
 
-            p = Point(location["longitude"], location["latitude"])
+            if location["longitude"] is None or location["latitude"] is None:
+                continue
+
+            p = Point(float(location["longitude"]), float(location["latitude"]))
             try:
                 obj = Location.objects.get(**real_loc)
                 obj.geolocation = p
@@ -72,6 +77,10 @@ class Command(BaseCommand):
                 )
 
         for incident in tqdm(db["incidents"].all(), desc="updating incidents"):
+            if incident["longitude"] is None or incident["latitude"] is None:
+                print("fix this incident, long+lat are broken", incident)
+                continue
+
             try:
                 l = Location.objects.get(**{x: incident[x] for x in location_fields})
             except Location.MultipleObjectsReturned:
@@ -93,8 +102,6 @@ class Command(BaseCommand):
 
             for x in [
                 "id",
-                "latitude",
-                "longitude",
                 "point_geom",
                 "chronicler_name",
                 "address",

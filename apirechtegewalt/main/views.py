@@ -322,7 +322,7 @@ class IncidentSubmittedCreate(SuccessMessageMixin, CreateView):
         "email",
     ]
 
-    success_url = "/neuerfall/"
+    success_url = "/neuetat/"
     success_message = (
         "Danke für deine Meldung. Wir prüfen sie und stellen die Tat danach online."
     )

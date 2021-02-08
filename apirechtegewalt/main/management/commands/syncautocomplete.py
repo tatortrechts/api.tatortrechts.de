@@ -14,3 +14,4 @@ class Command(BaseCommand):
 
         self.stdout.write("syncing autocomplete phrases...")
         generate_phrases()
+        self.stdout.write(self.style.SUCCESS("Success"))

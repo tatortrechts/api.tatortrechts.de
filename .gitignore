@@ -200,3 +200,4 @@ misc/importdata
 getdata.sh
 backupdata.json
 data.json
+misc/backups

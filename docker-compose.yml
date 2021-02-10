@@ -17,7 +17,6 @@ services:
         build: .
         volumes:
             - .:/app:cached
-            - ./misc/importdata:/importdata
 
         ports:
             - "8000:8000"
@@ -35,6 +34,7 @@ services:
         volumes:
             - .:/app
             - ./misc/importdata:/importdata
+            - ./misc/backups:/backups
         depends_on:
             - db
             - redis

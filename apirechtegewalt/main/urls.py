@@ -36,8 +36,16 @@ router.register(
     basename="chronicles_histogram",
 )
 
+from django.http import HttpResponseRedirect
+
+
+def redirect_fall(request):
+    return HttpResponseRedirect("/neuerfall/")
+
+
 urlpatterns = [
-    path("neuetat/", views.IncidentSubmittedCreate.as_view()),
+    path("neuetat/", redirect_fall),
+    path("neuerfall/", views.IncidentSubmittedCreate.as_view()),
     path("fehler/", views.ErrorReportCase.as_view()),
     path("", include(router.urls)),
 ]

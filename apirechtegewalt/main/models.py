@@ -145,7 +145,10 @@ class IncidentSubmitted(models.Model):
 
 
 class ErrorReport(models.Model):
-    incident_id = models.IntegerField(null=True)
+    incident = models.ForeignKey(
+        "Incident", on_delete=models.SET_NULL, null=True, blank=True
+    )
+
     description = models.TextField(
         "Beschreibung",
     )

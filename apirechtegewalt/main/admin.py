@@ -8,12 +8,12 @@ admin.site.register(User, UserAdmin)
 
 @admin.register(IncidentSubmitted)
 class IncidentSubmittedAdmin(admin.ModelAdmin):
-    pass
+    list_display = ("title", "location_input", "date")
 
 
 @admin.register(ErrorReport)
 class ErrorReportAdmin(admin.ModelAdmin):
-    pass
+    list_display = ("description", "email", "incident")
 
 
 @admin.register(Incident)

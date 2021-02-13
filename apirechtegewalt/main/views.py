@@ -353,8 +353,6 @@ class ErrorReportCase(SuccessMessageMixin, CreateView):
     def form_valid(self, form):
         if "incident_id" in self.request.GET:
             incident_id = int(self.request.GET["incident_id"])
-        else:
-            incident_id = None
+            form.instance.incident = Incident.objects.get(id=incident_id)
 
-        form.instance.incident_id = incident_id
         return super().form_valid(form)

@@ -116,9 +116,16 @@ class Command(BaseCommand):
 
             rg_id = incident["rg_id"]
             del incident["rg_id"]
-            obj, created = Incident.objects.update_or_create(
-                rg_id=rg_id, location=l, chronicle=chro, **incident
-            )
+
+            oldinc = Incident.objects.get(rg_id=rg_id)
+            if oldinc is None:
+                obj, created = Incident.objects.update_or_create(
+                    rg_id=rg_id, location=l, chronicle=chro, **incident
+                )
+            else:
+                # update
+                oldinc.update(location=l, chronicle=chro, **incident)
+                oldinc.safe()
 
         for source in tqdm(db["sources"].all(), desc="updating sources"):
             try:

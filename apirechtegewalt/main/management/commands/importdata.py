@@ -123,9 +123,11 @@ class Command(BaseCommand):
                     rg_id=rg_id, location=l, chronicle=chro, **incident
                 )
             else:
+                # fuck this, fix later
+                pass
                 # update
-                oldinc.update(location=l, chronicle=chro, **incident)
-                oldinc.safe()
+                # oldinc.update(location=l, chronicle=chro, **incident)
+                # oldinc.safe()
 
         for source in tqdm(db["sources"].all(), desc="updating sources"):
             try:

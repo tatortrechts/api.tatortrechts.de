@@ -77,6 +77,12 @@ class Command(BaseCommand):
                 )
 
         for incident in tqdm(db["incidents"].all(), desc="updating incidents"):
+            if "age" in incident:
+                del incident["age"]
+
+            if "official" in incident:
+                del incident["official"]
+
             if incident["longitude"] is None or incident["latitude"] is None:
                 print("fix this incident, long+lat are broken", incident)
                 continue

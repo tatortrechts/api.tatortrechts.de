@@ -114,8 +114,10 @@ class Command(BaseCommand):
             ] + location_fields:
                 del incident[x]
 
+            rg_id = incident["rg_id"]
+            del incident["rg_id"]
             obj, created = Incident.objects.update_or_create(
-                location=l, chronicle=chro, **incident
+                rg_id=rg_id, location=l, chronicle=chro, **incident
             )
 
         for source in tqdm(db["sources"].all(), desc="updating sources"):

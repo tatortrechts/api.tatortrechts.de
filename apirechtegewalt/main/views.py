@@ -301,6 +301,12 @@ class ChroniclesHistogramViewSet(viewsets.ViewSet):
         return Response({"result": queryset})
 
 
+class AllCaseIdsViewSet(viewsets.ViewSet):
+    def list(self, response):
+        queryset = Incident.objects.all().values_list("id", flat=True)
+        return Response({"result": queryset})
+
+
 # FIXME
 # non-api views
 

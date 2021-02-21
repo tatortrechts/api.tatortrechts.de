@@ -35,6 +35,11 @@ router.register(
     views.ChroniclesHistogramViewSet,
     basename="chronicles_histogram",
 )
+router.register(
+    r"all_case_ids",
+    views.AllCaseIdsViewSet,
+    basename="all_case_ids",
+)
 
 from django.http import HttpResponseRedirect
 

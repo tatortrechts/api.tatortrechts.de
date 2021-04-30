@@ -1,5 +1,8 @@
 FROM python:3.8
 
+ARG DEVELOPMENT=False
+
+ENV DEVELOPMENT $DEVELOPMENT
 ENV PYTHONUNBUFFERED 1
 RUN apt-get update && apt-get upgrade -y
 
@@ -7,14 +10,13 @@ RUN apt-get update && apt-get upgrade -y
 RUN apt-get install -y binutils libproj-dev gdal-bin libgdal-dev postgresql-client
 
 RUN pip install --upgrade pip setuptools wheel poetry
-ADD poetry.lock /app/
-ADD pyproject.toml /app/
 RUN poetry config virtualenvs.create false
+
 WORKDIR /app
 
-RUN /bin/bash -c '[[ -z "${IN_DOCKER}" ]] && poetry install --no-interaction --no-root || poetry install --no-dev --no-interaction --no-root'
+COPY poetry.lock pyproject.toml .
+RUN if [ "$DEVELOPMENT" = "True" ]; then poetry install --no-interaction --no-root ; else poetry install --no-dev --no-interaction --no-root ; fi
 
-ADD dokku/ /app/
+COPY dokku/ .
+COPY . .
 
-COPY . /app/
-RUN /app/manage.py collectstatic --noinput

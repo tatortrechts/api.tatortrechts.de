@@ -12,24 +12,23 @@ services:
             - "5432:5432"
 
     web:
-        command: ./manage.py runserver 0.0.0.0:8000
-        image: web
-        build: .
+        command: ./manage.py runserver_plus 0.0.0.0:8000
+        build:
+            context: .
+            args:
+                DEVELOPMENT: "True"
+        image: django
         volumes:
             - .:/app:cached
-
         ports:
             - "8000:8000"
         depends_on:
             - db
             - redis
             - manage
-        environment:
-            IN_DOCKER: 1
 
     manage:
-        image: web
-        build: .
+        image: django
         command: bash -c "./manage.py makemigrations && ./manage.py migrate --noinput"
         volumes:
             - .:/app
@@ -38,5 +37,3 @@ services:
         depends_on:
             - db
             - redis
-        environment:
-            IN_DOCKER: 1

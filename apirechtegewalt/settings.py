@@ -13,23 +13,17 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/2.0/howto/deployment/checklist/
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.getenv("SECRET_KEY", "override me")
+DEBUG = os.getenv("DEVELOPMENT") == "True"
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True if os.getenv("NODEBUG") is None else False
-
+SECRET_KEY = "secret" if DEBUG else os.getenv("SECRET_KEY")
 
 # https://stackoverflow.com/a/45288019/4028896
 ALLOWED_HOSTS = (
     ["*"]
-    if os.getenv("NODEBUG") is None
+    if DEBUG
     else [".api.tatortrechts.de"]
     + ["172.17.{}.{}".format(i, j) for i in range(256) for j in range(256)]
 )
-
-
-DEFAULT_FROM_EMAIL = "kontakt@tatortrechts.de"
 
 # Application definition
 
@@ -45,6 +39,7 @@ INSTALLED_APPS = [
     "wagtail.search",
     "wagtail.admin",
     "wagtail.core",
+    "wagtail.api.v2",
     "modelcluster",
     "taggit",
     "django.contrib.admin",
@@ -55,18 +50,21 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "whitenoise.runserver_nostatic",
     "django.contrib.staticfiles",
-    "django_extensions",
-    "corsheaders",
     "django.contrib.gis",
-    "django_filters",
     "rest_framework",
     "rest_framework_gis",
-    "wagtail.api.v2",
+    "corsheaders",
+    "django_filters",
     "crispy_forms",
-    "dbbackup",  # django-dbbackup
+    "dbbackup",
     "apirechtegewalt.main",
     "apirechtegewalt.cms",
 ]
+
+if DEBUG:
+    INSTALLED_APPS += [
+        "django_extensions",
+    ]
 
 MIDDLEWARE = [
     "wagtail.contrib.redirects.middleware.RedirectMiddleware",
@@ -101,23 +99,20 @@ TEMPLATES = [
     }
 ]
 
-CRISPY_TEMPLATE_PACK = "bootstrap4"
-
-TEMPLATE_STRING_IF_INVALID = "VARIABLE UNDEFINED: %s"
-
-WSGI_APPLICATION = "apirechtegewalt.wsgi.application"
+DEFAULT_FROM_EMAIL = "kontakt@tatortrechts.de"
 
 AUTH_USER_MODEL = "main.User"
-
-# Adjust this to taste.
-SESSION_ENGINE = "django.contrib.sessions.backends.cached_db"
-
 CORS_ALLOW_ALL_ORIGINS = True
+
+WSGI_APPLICATION = "apirechtegewalt.wsgi.application"
+SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 
 # Keep connections in the pool for an hour.
 CONN_MAX_AGE = 60 * 60
 
-if os.getenv("IN_DOCKER"):
+# databasis
+
+if DEBUG:
     DATABASES = {
         "default": {
             "ENGINE": "django.contrib.gis.db.backends.postgis",
@@ -129,21 +124,11 @@ if os.getenv("IN_DOCKER"):
         }
     }
 
-    CACHES = {
-        "default": {
-            "BACKEND": "django_redis.cache.RedisCache",
-            "LOCATION": "redis://redis/1",
-            "OPTIONS": {"CLIENT_CLASS": "django_redis.client.DefaultClient"},
-        }
-    }
-
-    SESSION_CACHE_ALIAS = "default"
-    SESSION_COOKIE_AGE = 365 * 24 * 60 * 60
 elif os.getenv("DATABASE_URL"):
     # Running under Dokku.
     USER, PASSWORD, HOST, PORT, NAME = re.match(  # type: ignore
         r"^postgres://(?P<username>.*?)\:(?P<password>.*?)\@(?P<host>.*?)\:(?P<port>\d+)\/(?P<db>.*?)$",
-        os.getenv("DATABASE_URL", ""),
+        os.getenv("DATABASE_URL"),
     ).groups()
 
     DATABASES = {
@@ -156,28 +141,27 @@ elif os.getenv("DATABASE_URL"):
             "PORT": int(PORT),
         }
     }
-
-    CACHES = {
-        "default": {
-            "BACKEND": "django_redis.cache.RedisCache",
-            "LOCATION": os.getenv("REDIS_URL", ""),
-            "OPTIONS": {"CLIENT_CLASS": "django_redis.client.DefaultClient"},
-        }
-    }
-
-    SESSION_CACHE_ALIAS = "default"
-    SESSION_ENGINE = "django.contrib.sessions.backends.cache"
-    SESSION_COOKIE_AGE = 365 * 24 * 60 * 60
-    SESSION_COOKIE_SECURE = True
-
-    SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
-
-
 else:
     print(
         "Can't connect to the database right now since environment variables are missing."
     )
 
+# caching
+
+CACHES = {
+    "default": {
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": os.getenv("REDIS_URL", "redis://redis/1"),
+        "OPTIONS": {"CLIENT_CLASS": "django_redis.client.DefaultClient"},
+    }
+}
+
+SESSION_CACHE_ALIAS = "default"
+SESSION_ENGINE = "django.contrib.sessions.backends.cache"
+SESSION_COOKIE_AGE = 365 * 24 * 60 * 60
+SESSION_COOKIE_SECURE = True
+
+# email
 
 if os.getenv("EMAIL_URL", ""):
     EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
@@ -190,7 +174,6 @@ else:
 
 
 # Password validation
-# https://docs.djangoproject.com/en/2.0/ref/settings/#auth-password-validators
 
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -202,22 +185,18 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 # Internationalization
-# https://docs.djangoproject.com/en/2.0/topics/i18n/
 
 LANGUAGE_CODE = "en-us"
-
 TIME_ZONE = "UTC"
-
 USE_I18N = True
-
 USE_L10N = True
-
 USE_TZ = True
-
 SITE_ID = 1
 
-# More information: https://docs.sentry.io/platforms/python/django/
-sentry_sdk.init(dsn=os.getenv("SENTRY_DSN"), integrations=[DjangoIntegration()])
+
+if not DEBUG:
+    # sentry: https://docs.sentry.io/platforms/python/django/
+    sentry_sdk.init(dsn=os.getenv("SENTRY_DSN"), integrations=[DjangoIntegration()])
 
 
 LOGGING = {
@@ -233,7 +212,6 @@ LOGGING = {
 }
 
 # Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/2.0/howto/static-files/
 
 STATIC_URL = "/static/"
 STATIC_ROOT = os.path.join(BASE_DIR, "_static")
@@ -243,8 +221,12 @@ STATICFILES_DIRS = [os.path.join(BASE_DIR, "static")]
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 MEDIA_URL = "/media/"
 
+# wagtails
+
 WAGTAIL_SITE_NAME = "Content for api.tatortrechts.de"
 WAGTAILIMAGES_IMAGE_MODEL = "cms.CustomImage"
+
+# DRF
 
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": (
@@ -255,23 +237,11 @@ REST_FRAMEWORK = {
     "DEFAULT_FILTER_BACKENDS": ("django_filters.rest_framework.DjangoFilterBackend",),
 }
 
+# backup
 
 DBBACKUP_STORAGE = "django.core.files.storage.FileSystemStorage"
 DBBACKUP_STORAGE_OPTIONS = {"location": "/backups/"}
 
+# crispy forms
 
-try:
-    from .local_settings import *  # noqa
-    from .local_settings import LOCAL_INSTALLED_APPS, LOCAL_MIDDLEWARE  # type: ignore
-except ImportError:
-    pass
-
-try:
-    INSTALLED_APPS += LOCAL_INSTALLED_APPS
-except:  # noqa
-    pass
-
-try:
-    MIDDLEWARE += LOCAL_MIDDLEWARE
-except:  # noqa
-    pass
+CRISPY_TEMPLATE_PACK = "bootstrap4"

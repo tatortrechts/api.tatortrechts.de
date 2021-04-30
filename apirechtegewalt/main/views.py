@@ -310,10 +310,10 @@ class AllCaseIdsViewSet(viewsets.ViewSet):
 # FIXME
 # non-api views
 
-from django.views.generic.edit import CreateView
+from django.contrib.messages.views import SuccessMessageMixin
 from django.forms import DateInput
 from django.utils.crypto import get_random_string
-from django.contrib.messages.views import SuccessMessageMixin
+from django.views.generic.edit import CreateView
 
 
 class IncidentSubmittedCreate(SuccessMessageMixin, CreateView):
@@ -343,9 +343,6 @@ class IncidentSubmittedCreate(SuccessMessageMixin, CreateView):
     def form_valid(self, form):
         form.instance.rg_id = "tatortrechts-" + get_random_string(length=50)
         return super().form_valid(form)
-
-
-from base64 import b64decode
 
 
 class ErrorReportCase(SuccessMessageMixin, CreateView):

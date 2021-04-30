@@ -74,12 +74,12 @@ dokku run api ./manage.py importdata /importdata/rechtegewalt.db
 ```
 
 ```bash
-# backupdata.sh
+# backup.sh
 #!/usr/bin/env bash
 set -e
 set -x
 
-dokku run api bash -c "./manage.py mediabackup && ./manage.py dbbackup"
+dokku run api bash -c "./manage.py mediabackup --clean && ./manage.py dbbackup --clean"
 ```
 
 ### Environment Varibales

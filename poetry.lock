@@ -126,7 +126,7 @@ python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*"
 
 [[package]]
 name = "clean-text"
-version = "0.3.0"
+version = "0.4.0"
 description = "Functions to preprocess and normalize text."
 category = "main"
 optional = false
@@ -134,7 +134,7 @@ python-versions = ">=3.5"
 
 [package.dependencies]
 emoji = "*"
-ftfy = ">=5.8,<6.0"
+ftfy = ">=6.0,<7.0"
 unidecode = {version = ">=1.1.1,<2.0.0", optional = true, markers = "extra == \"gpl\""}
 
 [package.extras]
@@ -358,14 +358,17 @@ python-versions = ">=3.6"
 
 [[package]]
 name = "ftfy"
-version = "5.9"
+version = "6.0.1"
 description = "Fixes some problems with Unicode text after the fact"
 category = "main"
 optional = false
-python-versions = ">=3.5"
+python-versions = ">=3.6"
 
 [package.dependencies]
 wcwidth = "*"
+
+[package.extras]
+docs = ["furo", "sphinx"]
 
 [[package]]
 name = "greenlet"
@@ -899,7 +902,7 @@ python-versions = "*"
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.8"
-content-hash = "3090333f8d8526c71f0a8c1c6d3e22c599fbf1ba23e2f29504a4ae7f8afda49c"
+content-hash = "d01862c1fb20572f16c46ed4f3b597c2b46d08116d5ef413539106c62b47bb38"
 
 [metadata.files]
 alembic = [
@@ -948,8 +951,8 @@ chardet = [
     {file = "chardet-4.0.0.tar.gz", hash = "sha256:0d6f53a15db4120f2b08c94f11e7d93d2c911ee118b6b30a04ec3ee8310179fa"},
 ]
 clean-text = [
-    {file = "clean-text-0.3.0.tar.gz", hash = "sha256:648de7c65d474c65c36ec7d1f19e815c942d67bde2db4894d3930afb75da769e"},
-    {file = "clean_text-0.3.0-py3-none-any.whl", hash = "sha256:d2f0c0e1829ac6c4b7a95f16f40ee55cf854a52a96448d5a1ee70d8504aac49a"},
+    {file = "clean-text-0.4.0.tar.gz", hash = "sha256:8a45df013c4b58a7f367d3264265cabe00a3cc918f27fbb3cb8492ed6b940d9d"},
+    {file = "clean_text-0.4.0-py3-none-any.whl", hash = "sha256:fbc05cca65ef577c8d18543df9f62540476a1936e8038d02270cf248cafc985d"},
 ]
 click = [
     {file = "click-7.1.2-py2.py3-none-any.whl", hash = "sha256:dacca89f4bfadd5de3d7489b7c8a566eee0d3676333fbb50030263894c38c0dc"},
@@ -1077,7 +1080,7 @@ et-xmlfile = [
     {file = "et_xmlfile-1.1.0.tar.gz", hash = "sha256:8eb9e2bc2f8c97e37a2dc85a09ecdcdec9d8a396530a6d5a33b30b9a92da0c5c"},
 ]
 ftfy = [
-    {file = "ftfy-5.9.tar.gz", hash = "sha256:8c4fb2863c0b82eae2ab3cf353d9ade268dfbde863d322f78d6a9fd5cefb31e9"},
+    {file = "ftfy-6.0.1.tar.gz", hash = "sha256:9eb68533eb2a6124e96ed7f63049e6c519194fda3fae92629b5e0b5753cb2c8f"},
 ]
 greenlet = [
     {file = "greenlet-1.0.0-cp27-cp27m-macosx_10_14_x86_64.whl", hash = "sha256:1d1d4473ecb1c1d31ce8fd8d91e4da1b1f64d425c1dc965edc4ed2a63cfa67b2"},

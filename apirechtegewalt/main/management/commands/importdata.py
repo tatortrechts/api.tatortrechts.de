@@ -1,6 +1,7 @@
 import dataset
 from django.contrib.gis.geos import Point
 from django.core.management.base import BaseCommand, CommandError
+from django.db import transaction
 from tqdm import tqdm
 
 from ...autocomplete import generate_phrases
@@ -21,27 +22,30 @@ location_fields = [
 
 
 class Command(BaseCommand):
-    help = "Import data from a sqlite db."
+    help = "Import incidents from a sqlite db into Django's postgres db"
 
     def add_arguments(self, parser):
-        parser.add_argument("db_path", type=str)
         parser.add_argument(
-            "--delete",
+            "db_path",
+            type=str,
+            default="/importdata/rechtegewalt.db",
+            nargs="?",
+        )
+
+        parser.add_argument(
+            "--skip-chronicles",
             action="store_true",
         )
 
-    def handle(self, db_path, *args, **options):
-        db = dataset.connect("sqlite:///" + db_path)
+        parser.add_argument(
+            "--dry-run",
+            action="store_true",
+        )
 
-        if options["delete"]:
-            self.stdout.write("Deleting old data...")
-
-            models = [Chronicle, Location, Incident, Source]
-            for m in models:
-                m.objects.all().delete()
-
-        for c in tqdm(db["chronicles"].all(), desc="updating chronicles"):
-            obj, created = Chronicle.objects.update_or_create(
+    def add_chronicles(self):
+        """add / update all chronicles"""
+        for c in tqdm(self.db["chronicles"].all(), desc="updating chronicles"):
+            Chronicle.objects.update_or_create(
                 name=c["chronicler_name"],
                 description=c["chronicler_description"],
                 url=c["chronicler_url"],
@@ -51,32 +55,56 @@ class Command(BaseCommand):
                 region=c["region"],
             )
 
-        for location in tqdm(db["locations"].all(), desc="updating location"):
-            # can't use `update_or_create` for Geo
-            real_loc = {x: location[x] for x in location_fields}
-            real_loc["location_string"] = ", ".join(
-                [x for k, x in real_loc.items() if x is not None]
+    def one_location_exists_import(self, incident):
+        """Checks wheter there is exaclty one location for a given inicent in the imported data."""
+        results = list(
+            self.db["locations"].find(**{x: incident[x] for x in location_fields})
+        )
+
+        if len(results) == 1:
+            return True
+        if len(results) > 1:
+            self.stdout.write(
+                self.style.NOTICE(f"too many locations for {incident.rg_id}")
+            )
+        else:
+            self.stdout.write(self.style.NOTICE(f"no location for {incident.rg_id}"))
+
+        return False
+
+    def get_or_create_location(self, incident):
+        """get or create a location for an incident"""
+        loc_fields = {x: incident[x] for x in location_fields}
+        try:
+            return Location.objects.get(**loc_fields)
+        except Location.DoesNotExist:
+            import_location = self.db["locations"].find_one(
+                **{x: incident[x] for x in location_fields}
             )
 
-            if location["longitude"] is None or location["latitude"] is None:
-                continue
+            p = Point(
+                float(import_location["longitude"]), float(import_location["latitude"])
+            )
+            return Location.objects.create(
+                **loc_fields, geolocation=p, geolocation_geometry=p
+            )
 
-            p = Point(float(location["longitude"]), float(location["latitude"]))
-            try:
-                obj = Location.objects.get(**real_loc)
-                obj.geolocation = p
-                obj.geolocation_geometry = p
-                # not sure about this
-                obj.__dict__.update(real_loc)
-                obj.save()
-            except Location.DoesNotExist:
-                obj = Location.objects.create(
-                    geolocation=p,
-                    geolocation_geometry=p,
-                    **real_loc,
-                )
+    def create_sources(self, incident):
+        for source in self.db["sources"].find(rg_id=incident.rg_id):
+            del source["id"]
+            obj, created = Source.objects.update_or_create(incident=incident, **source)
 
-        for incident in tqdm(db["incidents"].all(), desc="updating incidents"):
+    def add_incidents_for_chronicle(self, chronicle: Chronicle):
+        """add all new imported incident for given chronicle"""
+
+        self.stdout.write(f"adding new incidents for {chronicle.name}")
+
+        last_updated = chronicle.incident_set.latest("date")
+
+        for incident in tqdm(
+            self.db["incidents"].find(chronicler_name=chronicle.name),
+            desc=f"updating incidents: {chronicle.name}",
+        ):
             if "age" in incident:
                 del incident["age"]
 
@@ -87,42 +115,44 @@ class Command(BaseCommand):
                 print("fix this incident, long+lat are broken", incident)
                 continue
 
-            try:
-                l = Location.objects.get(**{x: incident[x] for x in location_fields})
-            except Location.MultipleObjectsReturned:
-                print({x: incident[x] for x in location_fields})
-                print(
-                    list(
-                        Location.objects.filter(
-                            **{x: incident[x] for x in location_fields}
-                        )
-                    )
-                )
-                print("error")
-                raise ValueError()
-            except Location.DoesNotExist:
-                print("skipping over this item, could not find location ", incident)
-                continue
-
-            chro = Chronicle.objects.get(name=incident["chronicler_name"])
-
-            for x in [
-                "id",
-                "point_geom",
-                "chronicler_name",
-                "address",
-            ] + location_fields:
-                del incident[x]
-
             rg_id = incident["rg_id"]
-            del incident["rg_id"]
 
             try:
                 Incident.objects.get(rg_id=rg_id)
             except Incident.DoesNotExist:
-                obj, created = Incident.objects.update_or_create(
-                    rg_id=rg_id, location=l, chronicle=chro, **incident
+
+                # check wheter there is an
+                inci_date = incident["date"].date()
+                if last_updated and inci_date < last_updated.date:
+                    confirm_input = input(
+                        f"You sure you wanna import the incident {rg_id} from {inci_date}? It's older then {last_updated.rg_id} from {last_updated.date}. If yes, enter: 'y'"
+                    )
+                    if confirm_input != "y":
+                        print(incident)
+                        raise ValueError
+
+                if not self.one_location_exists_import(incident):
+                    continue
+
+                l = self.get_or_create_location(incident)
+
+                for x in [
+                    "rg_id",
+                    "id",
+                    "point_geom",
+                    "chronicler_name",
+                    "address",
+                ] + location_fields:
+                    del incident[x]
+
+                incident_obj = Incident.objects.create(
+                    rg_id=rg_id, location=l, chronicle=chronicle, **incident
                 )
+                print(f"new incident: {rg_id}")
+                print(incident)
+
+                self.create_sources(incident_obj)
+
             # if oldinc is None:
             #     obj, created = Incident.objects.update_or_create(
             #         rg_id=rg_id, location=l, chronicle=chro, **incident
@@ -134,14 +164,35 @@ class Command(BaseCommand):
             # oldinc.update(location=l, chronicle=chro, **incident)
             # oldinc.safe()
 
-        for source in tqdm(db["sources"].all(), desc="updating sources"):
-            try:
-                incident = Incident.objects.get(rg_id=source["rg_id"])
-            except Incident.DoesNotExist:
-                print(f"cannot find an incident for {source}")
-                continue
-            del source["id"]
-            obj, created = Source.objects.update_or_create(incident=incident, **source)
+    @transaction.atomic
+    def handle(self, db_path, *args, **options):
+        # make the db easily accesible to all other methods
+        self.db = dataset.connect("sqlite:///" + db_path)
+
+        if not options["skip_chronicles"]:
+            self.add_chronicles()
+
+        # choose a single chronicle or iterate over all chronicles
+
+        all_c = Chronicle.objects.all().values_list("name", flat=True)
+        input_tex = (
+            "Please choose a chronicle:\n0: all\n"
+            + "\n".join([f"{i+1}: {x}" for i, x in enumerate(all_c)])
+            + "\n"
+        )
+        chosen_c_input = input(input_tex)
+
+        if chosen_c_input == "0":
+            for c in Chronicle.objects.all():
+                self.add_incidents_for_chronicle(c)
+        else:
+            chosen_c = Chronicle.objects.get(name=all_c[int(chosen_c_input) - 1])
+            self.add_incidents_for_chronicle(chosen_c)
+
+        if options["dry_run"]:
+            # Return, rolling back transaction when atomic block exits
+            transaction.set_rollback(True)
+            return
 
         self.stdout.write("syncing text vector fields...")
         Incident.objects.sync()

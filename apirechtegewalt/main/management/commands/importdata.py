@@ -42,6 +42,16 @@ class Command(BaseCommand):
             action="store_true",
         )
 
+        parser.add_argument(
+            "--force",
+            action="store_true",
+        )
+
+        parser.add_argument(
+            "--all",
+            action="store_true",
+        )
+
     def add_chronicles(self):
         """add / update all chronicles"""
         for c in tqdm(self.db["chronicles"].all(), desc="updating chronicles"):
@@ -94,7 +104,7 @@ class Command(BaseCommand):
             del source["id"]
             obj, created = Source.objects.update_or_create(incident=incident, **source)
 
-    def add_incidents_for_chronicle(self, chronicle: Chronicle):
+    def add_incidents_for_chronicle(self, chronicle: Chronicle, confirm: bool):
         """add all new imported incident for given chronicle"""
 
         self.stdout.write(f"adding new incidents for {chronicle.name}")
@@ -123,7 +133,7 @@ class Command(BaseCommand):
 
                 # check wheter there is an
                 inci_date = incident["date"].date()
-                if last_updated and inci_date < last_updated.date:
+                if confirm and last_updated and inci_date < last_updated.date:
                     confirm_input = input(
                         f"You sure you wanna import the incident {rg_id} from {inci_date}? It's older then {last_updated.rg_id} from {last_updated.date}. If yes, enter: 'y'"
                     )
@@ -148,8 +158,6 @@ class Command(BaseCommand):
                 incident_obj = Incident.objects.create(
                     rg_id=rg_id, location=l, chronicle=chronicle, **incident
                 )
-                print(f"new incident: {rg_id}")
-                print(incident)
 
                 self.create_sources(incident_obj)
 
@@ -174,20 +182,21 @@ class Command(BaseCommand):
 
         # choose a single chronicle or iterate over all chronicles
 
-        all_c = Chronicle.objects.all().values_list("name", flat=True)
-        input_tex = (
-            "Please choose a chronicle:\n0: all\n"
-            + "\n".join([f"{i+1}: {x}" for i, x in enumerate(all_c)])
-            + "\n"
-        )
-        chosen_c_input = input(input_tex)
+        if not options["all"]:
+            all_c = Chronicle.objects.all().values_list("name", flat=True)
+            input_tex = (
+                "Please choose a chronicle:\n0: all\n"
+                + "\n".join([f"{i+1}: {x}" for i, x in enumerate(all_c)])
+                + "\n"
+            )
+            chosen_c_input = input(input_tex)
 
-        if chosen_c_input == "0":
+        if options["all"] or chosen_c_input == "0":
             for c in Chronicle.objects.all():
-                self.add_incidents_for_chronicle(c)
+                self.add_incidents_for_chronicle(c, not options["force"])
         else:
             chosen_c = Chronicle.objects.get(name=all_c[int(chosen_c_input) - 1])
-            self.add_incidents_for_chronicle(chosen_c)
+            self.add_incidents_for_chronicle(chosen_c, not options["force"])
 
         if options["dry_run"]:
             # Return, rolling back transaction when atomic block exits

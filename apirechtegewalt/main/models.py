@@ -40,7 +40,6 @@ class Location(models.Model):
     state = models.CharField(max_length=255, null=True)
     country = models.CharField(max_length=255, null=True)
 
-    location_string = models.TextField(unique=True)
     geolocation = models.PointField(geography=True, default=Point(0.0, 0.0))
     # this is not geographical but speeds up computation for e.g. bounding box check
     geolocation_geometry = models.PointField(default=Point(0.0, 0.0))

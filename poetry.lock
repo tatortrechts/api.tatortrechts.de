@@ -185,7 +185,7 @@ dev = ["pip", "nose", "wheel", "flake8", "coverage", "psycopg2-binary", "pymysql
 
 [[package]]
 name = "django"
-version = "3.1.10"
+version = "3.1.12"
 description = "A high-level Python Web framework that encourages rapid development and clean, pragmatic design."
 category = "main"
 optional = false
@@ -902,7 +902,7 @@ python-versions = "*"
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.8"
-content-hash = "9507e2a1160335f18a587920353ab1a3ce0e8c8e5a432044bb3ebda7d5c69a2c"
+content-hash = "c354c0a8232c58e2b5e53a39d1cfb0f705c437085073a297c64ad3de8b55d742"
 
 [metadata.files]
 alembic = [
@@ -1021,8 +1021,8 @@ dataset = [
     {file = "dataset-1.5.0.tar.gz", hash = "sha256:0c3e3226b1bbd79d6499892d78af0242d9dff114fd1174a0826243db8adeef60"},
 ]
 django = [
-    {file = "Django-3.1.10-py3-none-any.whl", hash = "sha256:973c968e63518859732f018975364785dd96f0581b1e4b12e2a4b749415ac43a"},
-    {file = "Django-3.1.10.tar.gz", hash = "sha256:cd6ec37db950a384dba3341b135394fdc776ede4d149fc7abde1e45a21ec4f22"},
+    {file = "Django-3.1.12-py3-none-any.whl", hash = "sha256:a523d62b7ab2908f551dabc32b99017a86aa7784e32b761708e52be3dce6d35d"},
+    {file = "Django-3.1.12.tar.gz", hash = "sha256:dc41bf07357f1f4810c1c555b685cb51f780b41e37892d6cc92b89789f2847e1"},
 ]
 django-cors-headers = [
     {file = "django-cors-headers-3.7.0.tar.gz", hash = "sha256:96069c4aaacace786a34ee7894ff680780ec2644e4268b31181044410fecd12e"},

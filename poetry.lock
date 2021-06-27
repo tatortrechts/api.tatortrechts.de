@@ -795,7 +795,7 @@ brotli = ["brotlipy (>=0.6.0)"]
 
 [[package]]
 name = "wagtail"
-version = "2.12.4"
+version = "2.12.5"
 description = "A Django content management system."
 category = "main"
 optional = false
@@ -902,7 +902,7 @@ python-versions = "*"
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.8"
-content-hash = "60dc0426da727678fc42637dffae1fb14c666b1bdd89c1a1759f3662f81740b4"
+content-hash = "51493f8764cd2e0325f53039dfb13bca7bfcf44ca439f2ab148c12ef9bb956b9"
 
 [metadata.files]
 alembic = [
@@ -1446,8 +1446,8 @@ urllib3 = [
     {file = "urllib3-1.26.4.tar.gz", hash = "sha256:e7b021f7241115872f92f43c6508082facffbd1c048e3c6e2bb9c2a157e28937"},
 ]
 wagtail = [
-    {file = "wagtail-2.12.4-py3-none-any.whl", hash = "sha256:22487db9b721598eb5ffab17efd66ed4e82a283b86423e2e0db2ec4b5a498e58"},
-    {file = "wagtail-2.12.4.tar.gz", hash = "sha256:ca4c56efcd0833c38c75be05274f442f40dd88e15bf0136a4fe15663162a6c5d"},
+    {file = "wagtail-2.12.5-py3-none-any.whl", hash = "sha256:4b866d9cfbfb15b0ca4482761afea3b12a1b3a5c5d8834e045cc9aa492decba7"},
+    {file = "wagtail-2.12.5.tar.gz", hash = "sha256:93afb1c8c1dae6261ba54a65ceabf7a8d20fe43ae20ceb2ae6956e69aa1963bd"},
 ]
 wcwidth = [
     {file = "wcwidth-0.2.5-py2.py3-none-any.whl", hash = "sha256:beb4802a9cebb9144e99086eff703a642a13d6a0052920003a230f3294bbe784"},

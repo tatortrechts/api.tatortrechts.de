@@ -51,7 +51,7 @@ class Location(models.Model):
 
     objects = LocationSearchQuerySet.as_manager()
 
-    class Meta(object):
+    class Meta:
         indexes = [GinIndex(fields=["search_vector"])]
 
 
@@ -78,7 +78,7 @@ class Incident(models.Model):
 
     objects = IncidentSearchQuerySet.as_manager()
 
-    class Meta(object):
+    class Meta:
         indexes = [GinIndex(fields=["search_vector"])]
 
 
@@ -99,7 +99,7 @@ class Phrase(models.Model):
 
     objects = PhrasesQuerySet.as_manager()
 
-    class Meta(object):
+    class Meta:
         indexes = [GinIndex(fields=["search_vector"])]
 
 

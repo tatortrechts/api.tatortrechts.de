@@ -1,12 +1,11 @@
 from django.db import models
-from wagtail.admin.edit_handlers import FieldPanel, StreamFieldPanel, MultiFieldPanel
-from wagtail.core import blocks
-from wagtail.core.fields import StreamField
-from wagtail.core.models import Page
+from wagtail.admin.panels import FieldPanel, MultiFieldPanel
+from wagtail import blocks
+from wagtail.fields import StreamField
+from wagtail.models import Page
 from wagtail.images.blocks import ImageChooserBlock
 from wagtail.api import APIField
 from wagtail.images.api.fields import ImageRenditionField
-from wagtail.images.edit_handlers import ImageChooserPanel
 
 from wagtail.images.models import Image, AbstractImage, AbstractRendition
 
@@ -122,7 +121,7 @@ class ContentPage(Page):
     )
 
     content_panels = Page.content_panels + [
-        StreamFieldPanel("body"),
+        FieldPanel("body"),
         FieldPanel("article_date"),
         FieldPanel("article_teaser"),
         FieldPanel("article_image_caption"),
@@ -131,9 +130,7 @@ class ContentPage(Page):
 
     promote_panels = [
         MultiFieldPanel(Page.promote_panels, "Common page configuration"),
-        ImageChooserPanel(
-            "article_image",
-        ),
+        FieldPanel("article_image"),
     ]
 
     # Export fields over the API

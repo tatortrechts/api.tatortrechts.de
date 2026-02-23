@@ -72,7 +72,7 @@ class SmallFastSetPagination(PageNumberPagination):
 
 
 class IncidentsViewSet(viewsets.ReadOnlyModelViewSet):
-    queryset = Incident.objects
+    queryset = Incident.objects.all()
     serializer_class = IncidentsSerializer
     filterset_class = IncidentFilter
     pagination_class = SmallFastSetPagination
@@ -168,7 +168,7 @@ class HistogramIncidentsViewSet(IncidentsViewSet):
 
 
 class AggregatedIncidentsViewSet(viewsets.ReadOnlyModelViewSet):
-    queryset = Incident.objects
+    queryset = Incident.objects.all()
     serializer_class = AggregatedIncidentsSerializer
     filterset_class = IncidentFilter
     pagination_class = None
@@ -193,7 +193,7 @@ class AutocompleteViewSet(viewsets.ReadOnlyModelViewSet):
     Autocomplete should never be empty.
     """
 
-    queryset = Incident.objects
+    queryset = Incident.objects.all()
     serializer_class = AutocompleteSerializer
     filterset_class = AutocompleteIncidentFilter
     pagination_class = None
@@ -224,7 +224,7 @@ class ChroniclesViewSet(viewsets.ReadOnlyModelViewSet):
 
 
 class LocationViewSet(viewsets.ReadOnlyModelViewSet):
-    queryset = Incident.objects
+    queryset = Incident.objects.all()
     serializer_class = LocationStringSerializer
     filterset_class = IncidentFilter
     pagination_class = None
@@ -233,7 +233,7 @@ class LocationViewSet(viewsets.ReadOnlyModelViewSet):
         queryset = super().filter_queryset(queryset)
         search_term = self.request.query_params.get("q_location")
 
-        rs_qs = Location.objects
+        rs_qs = Location.objects.all()
         if search_term is not None:
             rs_qs = rs_qs.search(search_term)
 

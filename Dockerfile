@@ -17,5 +17,4 @@ WORKDIR /app
 COPY poetry.lock pyproject.toml ./
 RUN if [ "$DEVELOPMENT" = "True" ]; then poetry install --no-interaction --no-root ; else poetry install --without dev --no-interaction --no-root ; fi
 
-COPY dokku/ ./
 COPY . .

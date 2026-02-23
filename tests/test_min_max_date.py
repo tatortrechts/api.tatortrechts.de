@@ -19,9 +19,10 @@ class TestMinMaxDate:
         assert data["max_date"] == "2023-09-20"  # berlin_2
         assert data["total"] == 4
 
-    def test_empty_db_raises(self, api_client, db):
-        # MinMaxDateViewSet calls .earliest() without try/except
-        from apirechtegewalt.main.models import Incident
-
-        with pytest.raises(Incident.DoesNotExist):
-            api_client.get(reverse("min_max_date-list"))
+    def test_empty_db_returns_null(self, api_client, db):
+        response = api_client.get(reverse("min_max_date-list"))
+        assert response.status_code == 200
+        data = response.json()
+        assert data["min_date"] is None
+        assert data["max_date"] is None
+        assert data["total"] == 0

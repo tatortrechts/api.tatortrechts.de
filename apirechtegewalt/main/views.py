@@ -284,9 +284,11 @@ class LocationViewSet(viewsets.ReadOnlyModelViewSet):
 # TODO: rename? not making sense with `total`
 class MinMaxDateViewSet(viewsets.ViewSet):
     def list(self, response):
+        total = Incident.objects.count()
+        if total == 0:
+            return Response({"min_date": None, "max_date": None, "total": 0})
         min_date = Incident.objects.earliest("date").date
         max_date = Incident.objects.latest("date").date
-        total = Incident.objects.count()
         return Response({"min_date": min_date, "max_date": max_date, "total": total})
 
 

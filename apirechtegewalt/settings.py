@@ -21,7 +21,7 @@ SECRET_KEY = "secret" if DEBUG else os.getenv("SECRET_KEY")
 ALLOWED_HOSTS = (
     ["*"]
     if DEBUG
-    else [".api.tatortrechts.de", ".app.jfilter.de"]
+    else [".api.tatortrechts.de", ".app.jfilter.de", "tor-api.web"]
     + ["172.17.{}.{}".format(i, j) for i in range(256) for j in range(256)]
 )
 

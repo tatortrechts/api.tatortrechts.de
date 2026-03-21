@@ -56,6 +56,7 @@ INSTALLED_APPS = [
     "corsheaders",
     "django_filters",
     "crispy_forms",
+    "crispy_bootstrap5",
     "dbbackup",
     "apirechtegewalt.main",
     "apirechtegewalt.cms",
